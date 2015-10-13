@@ -1,0 +1,42 @@
+<ion-side-menus>
+
+  <ion-pane ion-side-menu-content>
+
+    <ion-nav-bar class="bar-calm nav-title-slide-ios7">
+      <ion-nav-back-button class="button-clear"><i class="icon ion-ios7-arrow-back"></i>Retour</ion-nav-back-button>
+
+    </ion-nav-bar>
+
+    <ion-nav-view name="menuContent" animation="slide-left-right"></ion-nav-view>
+
+  </ion-pane>
+
+  <ion-side-menu side="left">
+
+    <header class="bar bar-header bar-stable">
+      <h1 class="title">Menu</h1>
+    </header>
+
+    <ion-content class="has-header">
+
+      <ion-list>
+        <ion-item href="#/app/accueil" menu-close>Accueil</ion-item>
+        <ion-item href="#/app/carte" menu-close>Carte</ion-item>
+        <ion-item href="#/app/ar" menu-close>Réalité augmentée</ion-item>
+        <ion-item href="#/app/arimage" menu-close>Réalité augmentée image</ion-item>        
+        <ion-item href="#/app/apropos" menu-close>A propos</ion-item>
+        <ion-item href="#/app/contact" menu-close>Contact</ion-item>
+
+       <!-- <ion-item nav-clear menu-close ng-click="goTo(locationKey)" ng-repeat="(locationKey,location) in locations track by location.name">
+          {{location.name}}
+        </ion-item> -->
+
+      </ion-list>
+
+    </ion-content>
+
+  </ion-side-menu>
+
+</ion-side-menus>
+
+
