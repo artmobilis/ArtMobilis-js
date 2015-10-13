@@ -1,4 +1,4 @@
-# Art Mobilis - Prototype ionic/angularjs/openstreetmap/ar
+# Art Mobilis - A public space augmented reality artistic route javascript application
 
 ##Quick launch 
 From the root folder,  execute `ionic serve` into a console.
