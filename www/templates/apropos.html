@@ -4,9 +4,13 @@
   </ion-nav-buttons>
     <ion-content class="padding">
 
-            <div class="item item-divider">A propos d'<b>Art Mobilis</b><br /></div>
-            
-            <span id="infos" ng-bind="infos">Informations techniques</span>
+      <div class="item item-divider">A propos d'<b>Art Mobilis</b><br /></div>
+
+      <span>Informations techniques:</span>
+      <ul class="apropos-techinfo-list">
+        <li><span id="usermedia" ng-bind="usermedia"></span></li>
+        <li><span id="gps" ng-bind="gps"></span></li>
+      </ul>
 
     </ion-content>
 </ion-view>
