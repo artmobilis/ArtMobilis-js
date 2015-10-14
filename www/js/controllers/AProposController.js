@@ -16,6 +16,30 @@ angular.module('artmobilis').controller('AProposController',
         $scope.$on("$ionicView.beforeLeave", function (e) {
 
         });
+        // Browser size & Screen Res
+        var screenResolution = '', screenColorDepth = '';
+        if (self.screen) {
+          screenResolution = screen.width + ' x ' + screen.height;
+          screenColorDepth = screen.colorDepth + ' bit';
+        }
+
+        var bsw = '', bsh = '';
+        if (window.innerWidth){
+          bsw = window.innerWidth;
+          bsh = window.innerHeight;
+        }
+        else if (document.documentElement){
+          bsw = document.documentElement.clientWidth;
+          bsh = document.documentElement.clientHeight;
+        }
+        else if (document.body){
+          bsw = document.body.clientWidth;
+          bsh = document.body.clientHeight;
+        }
+        if (bsw != '' && bsh != ''){
+          $scope.size = "Screen resolution :" + screenResolution + " , color depth :" + screenColorDepth + " , browser size :" + bsw + ' x ' + bsh + ".";
+        }
+        // hasUserMedia
         var hasUserMedia = function hasUserMedia() {
 
             navigator.getUserMedia = (navigator.getUserMedia ||
@@ -29,7 +53,7 @@ angular.module('artmobilis').controller('AProposController',
                 $scope.usermedia = "getUserMedia is not supported by the browser</em>";
             }
         };
-
+        // hasGeolocation
         var hasGeolocation = function hasGeolocation() {
 
           if (navigator.geolocation) {
