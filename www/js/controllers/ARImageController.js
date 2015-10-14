@@ -16,57 +16,82 @@ angular.module('artmobilis').controller('ARImageController',
       LocationsService,
       InstructionsService
       ) {
-        // lets do some fun
-        var video = document.getElementById('webcam');
-        var canvas2d = document.getElementById('canvas2d');
-        var canvas3D = document.getElementById('canvas3d');
-        var container = document.getElementById('container');
-        var timeproc = document.getElementById('timeproc');
-        var matchingresult = document.getElementById('matchingresult');
 
-        /////////////////////
-        // camera acquisition
-        /////////////////////
+        $scope.isVideo = false;
+        $scope.initialized = false;
+        $scope.requestId = undefined;
+        $scope.video = null;
+        // this has to be done BEFORE webcam authorization
+        $scope.channel = {
+            videoHeight: 800,
+            videoWidth: 600,
+            video: null // Will reference the video element on success
+        };
+        $scope.video = $scope.channel.video;
+        var canvas2d;
+        var canvas3D;
+        var container;
+        var timeproc;
+        var matchingresult;
 
-        try {
-            var attempts = 0;
-            var readyListener = function (event) {
-                findVideoSize();
-            };
-            var findVideoSize = function () {
-                if (video.videoWidth > 0 && video.videoHeight > 0) {
-                    video.removeEventListener('loadeddata', readyListener);
-                    onDimensionsReady(video.videoWidth, video.videoHeight);
-                } else {
-                    if (attempts < 10) {
-                        attempts++;
-                        setTimeout(findVideoSize, 200);
-                    } else {
-                        onDimensionsReady(640, 480);
-                    }
-                }
-            };
-            var onDimensionsReady = function (width, height) {
-                demo_app(width, height);
-                compatibility.requestAnimationFrame(tick);
-            };
 
-            video.addEventListener('loadeddata', readyListener);
+        // http://ionicframework.com/docs/api/directive/ionView/
+        // With the new view caching in Ionic, Controllers are only called
+        // when they are recreated or on app start, instead of every page change.
+        // To listen for when this page is active (for example, to refresh data),
+        // listen for the $ionicView.enter event:
+        $scope.$on('$ionicView.enter', function (e) {
+            //$scope.infos = "$ionicView.enter";
 
-            compatibility.getUserMedia({ video: true }, function (stream) {
-                try {
-                    video.src = compatibility.URL.createObjectURL(stream);
-                } catch (error) {
-                    video.src = stream;
-                }
-                setTimeout(function () {
-                    video.play();
-                }, 500);
-            }, function (error) {
-                console.log("error gum");
-            });
-        } catch (error) {
-            console.log("error a");
+            // start webcam when back on the page, not the first time
+            if ($scope.initialized) {
+                $scope.$broadcast('START_WEBCAM');
+            } else {
+
+            }
+            $scope.initialized = true;
+            startAnimation();
+        });
+        $scope.$on("$ionicView.loaded", function (e) {
+            setTimeout(function () {
+                // canvas2d
+                canvas2d = document.getElementById('canvas2d');
+                canvas3D = document.getElementById('canvas3d');
+                container = document.getElementById('container');
+                timeproc = document.getElementById('timeproc');
+                matchingresult = document.getElementById('matchingresult');
+
+                main_app();
+            }, 500);
+        });
+
+        $scope.$on("$ionicView.beforeLeave", function (e) {
+            stopAnimation();
+            $scope.$broadcast('STOP_WEBCAM');
+        });
+
+        $scope.channel = {};
+        $scope.onError = function (err) {
+            $scope.infos = "webcam onError";
+            //console.log("webcam onError");
+        };
+        $scope.onStream = function (stream) {
+            //$scope.infos = "webcam onStream";
+        };
+        $scope.onSuccess = function () {
+            //$scope.infos = "webcam onSuccess";
+        };
+        function startAnimation() {
+            if (!$scope.requestId) {
+                tick();
+            }
+        }
+
+        function stopAnimation() {
+            if ($scope.requestId) {
+                window.cancelAnimationFrame($scope.requestId);
+                $scope.requestId = undefined;
+            }
         }
 
         /////////////////////
@@ -443,7 +468,7 @@ angular.module('artmobilis').controller('ARImageController',
         // Demo initialisation
         /////////////////////
 
-        function demo_app(videoWidth, videoHeight) {
+        function main_app(videoWidth, videoHeight) {
             canvasWidth = canvas2d.width;
             canvasHeight = canvas2d.height;
             ctx = canvas2d.getContext('2d');
@@ -611,87 +636,107 @@ angular.module('artmobilis').controller('ARImageController',
         /////////////////////
         // video live Processing
         /////////////////////
-
+        var getVideoData = function getVideoData(x, y, w, h) {
+            var hiddenCanvas = document.createElement('canvas');
+            hiddenCanvas.width = $scope.video.width;
+            hiddenCanvas.height = $scope.video.height;
+            var ctx = hiddenCanvas.getContext('2d');
+            ctx.drawImage($scope.video, 0, 0, $scope.video.width, $scope.video.height);
+            return ctx.getImageData(x, y, w, h);
+        };
         function tick() {
-            compatibility.requestAnimationFrame(tick);
             stat.new_frame();
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                ctx.drawImage(video, 0, 0, 640, 480);
-                var imageData = ctx.getImageData(0, 0, 640, 480);
+            $scope.video = $scope.channel.video;
 
-                stat.start("grayscale");
-                jsfeat.imgproc.grayscale(imageData.data, 640, 480, img_u8);
-                stat.stop("grayscale");
+            if ($scope.video) {
+                if ($scope.video.width > 0) {
 
-                stat.start("gauss blur");
-                jsfeat.imgproc.gaussian_blur(img_u8, img_u8_smooth, options.blur_size | 0);
-                stat.stop("gauss blur");
+                    var videoData = getVideoData(0, 0, 640, 480);
+                    ctx.putImageData(videoData, 0, 0);
 
-                jsfeat.yape06.laplacian_threshold = options.lap_thres | 0;
-                jsfeat.yape06.min_eigen_value_threshold = options.eigen_thres | 0;
+                    var imageData = ctx.getImageData(0, 0, 640, 480);
 
-                stat.start("keypoints");
-                num_corners = detect_keypoints(img_u8_smooth, screen_corners, 500);
-                stat.stop("keypoints");
+                    stat.start("grayscale");
+                    jsfeat.imgproc.grayscale(imageData.data, 640, 480, img_u8);
+                    stat.stop("grayscale");
 
-                stat.start("orb descriptors");
-                jsfeat.orb.describe(img_u8_smooth, screen_corners, num_corners, screen_descriptors);
-                stat.stop("orb descriptors");
+                    stat.start("gauss blur");
+                    jsfeat.imgproc.gaussian_blur(img_u8, img_u8_smooth, options.blur_size | 0);
+                    stat.stop("gauss blur");
 
-                // render result back to canvas
-                var data_u32 = new Uint32Array(imageData.data.buffer);
-                render_corners(screen_corners, num_corners, data_u32, 640);
+                    jsfeat.yape06.laplacian_threshold = options.lap_thres | 0;
+                    jsfeat.yape06.min_eigen_value_threshold = options.eigen_thres | 0;
 
-                // render pattern and matches
-                var num_matches = [];
-                var good_matches = 0;
+                    stat.start("keypoints");
+                    num_corners = detect_keypoints(img_u8_smooth, screen_corners, 500);
+                    stat.stop("keypoints");
 
-                // search for the rigth pattern
-                stat.start("matching");
-                var id = 0;
-                var str, found = false;
-                for (id = 0; id < nb_trained; ++id) {
-                    num_matches[id] = match_pattern(id);
-                    str += "<br>Id : " + id + " nbMatches : " + num_matches[id];
-                    if (num_matches[id] < 20 || found)
-                        continue;
+                    stat.start("orb descriptors");
+                    jsfeat.orb.describe(img_u8_smooth, screen_corners, num_corners, screen_descriptors);
+                    stat.stop("orb descriptors");
 
-                    good_matches = find_transform(matches[id], num_matches[id], id);
-                    str += " nbGood : " + good_matches;
-                    if (good_matches > 8) {
-                        current_pattern = id;
-                        found = true;
+                    // render result back to canvas
+                    var data_u32 = new Uint32Array(imageData.data.buffer);
+                    render_corners(screen_corners, num_corners, data_u32, 640);
+
+                    // render pattern and matches
+                    var num_matches = [];
+                    var good_matches = 0;
+
+                    // search for the rigth pattern
+                    stat.start("matching");
+                    var id = 0;
+                    var str, found = false;
+                    for (id = 0; id < nb_trained; ++id) {
+                        num_matches[id] = match_pattern(id);
+                        str += "<br>Id : " + id + " nbMatches : " + num_matches[id];
+                        if (num_matches[id] < 20 || found)
+                            continue;
+
+                        good_matches = find_transform(matches[id], num_matches[id], id);
+                        str += " nbGood : " + good_matches;
+                        if (good_matches > 8) {
+                            current_pattern = id;
+                            found = true;
+                        }
                     }
-                }
-                matchingresult.innerHTML = str;
-                stat.stop("matching");
+                    matchingresult.innerHTML = str;
+                    stat.stop("matching");
 
-                // display last detected pattern
-                if (pattern_preview[current_pattern]) {
-                    render_mono_image(pattern_preview[current_pattern].data, data_u32, pattern_preview[current_pattern].cols, pattern_preview[current_pattern].rows, 640);
-                }
-
-                ctx.putImageData(imageData, 0, 0);
-
-                // display matching result and 3d when detection
-                if (num_matches[current_pattern]) { // last detected
-                    render_matches(ctx, matches[current_pattern], num_matches[current_pattern]);
-                    if (found) {
-                        render_pattern_shape(ctx);
-                        updateScenes(shape_pts);
-                        render();
+                    // display last detected pattern
+                    if (pattern_preview[current_pattern]) {
+                        render_mono_image(pattern_preview[current_pattern].data, data_u32, pattern_preview[current_pattern].cols, pattern_preview[current_pattern].rows, 640);
                     }
-                    else
-                        renderer3d.clear();
-                }
 
-                timeproc.innerHTML = stat.log();
+                    ctx.putImageData(imageData, 0, 0);
+
+                    // display matching result and 3d when detection
+                    if (num_matches[current_pattern]) { // last detected
+                        render_matches(ctx, matches[current_pattern], num_matches[current_pattern]);
+                        if (found) {
+                            render_pattern_shape(ctx);
+                            updateScenes(shape_pts);
+                            render();
+                        }
+                        else
+                            renderer3d.clear();
+                    }
+
+                    timeproc.innerHTML = stat.log();
+                }
             }
+            $scope.requestId = requestAnimationFrame(tick);
         }
 
         /////////////////////
         // 3D Pose and rendering
         /////////////////////
+        var textureVideo;//, material, materials = [], mesh;
+        var video = document.getElementById('videoTexture');
+        textureVideo = new THREE.VideoTexture(video);
+        textureVideo.minFilter = THREE.LinearFilter;
+        textureVideo.magFilter = THREE.LinearFilter;
+        textureVideo.format = THREE.RGBFormat;
 
         function updateScenes(corners) {
             var corners, corner, pose, i;

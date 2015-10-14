@@ -130,8 +130,9 @@ angular.module('webcam', [])
                   var sourceInfo = sourceInfos[i];
                   if (sourceInfo.kind === 'video') {
                       $scope.infos = "sourceInfo:" + sourceInfo.id;
-                      console.log( "sourceInfo:" + sourceInfo.id);
-                      videoSources.push(sourceInfo);
+                      console.log("sourceInfo:" + sourceInfo.id);
+                      // TODO quick and dirty fix for now
+                      if (sourceInfo.label !== "Spout Cam") videoSources.push(sourceInfo); 
                   }
               }
               // force cameraid within videoSources bounds
