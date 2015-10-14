@@ -16,66 +16,77 @@ angular.module('artmobilis').controller('AProposController',
         $scope.$on("$ionicView.beforeLeave", function (e) {
 
         });
+        // OnLine/Offline
+        {
+          if(navigator.onLine){ // always respond true under firefox41 + linux
+            $scope.infoOnline = "The browser is online.";
+            }
+            else {
+            $scope.infoOnline = "The browser is offline.";
+          }
+        }
 
         // Browser Type
         {
           $scope.infoBrowser = navigator.userAgent;
         }
+
         // Browser size & Screen Res
-        var screenResolution = '', screenColorDepth = '';
-        if (self.screen) {
-          screenResolution = screen.width + ' x ' + screen.height;
-          screenColorDepth = screen.colorDepth + ' bit';
+        {
+          var screenResolution = '', screenColorDepth = '';
+          if (self.screen) {
+            screenResolution = screen.width + ' x ' + screen.height;
+            screenColorDepth = screen.colorDepth + ' bit';
+          }
+
+          var bsw = '', bsh = '';
+          if (window.innerWidth){
+            bsw = window.innerWidth;
+            bsh = window.innerHeight;
+          }
+          else if (document.documentElement){
+            bsw = document.documentElement.clientWidth;
+            bsh = document.documentElement.clientHeight;
+          }
+          else if (document.body){
+            bsw = document.body.clientWidth;
+            bsh = document.body.clientHeight;
+          }
+          if (bsw != '' && bsh != ''){
+            $scope.infoSize = "Screen resolution :" + screenResolution + " , color depth :" + screenColorDepth + " , browser size :" + bsw + ' x ' + bsh + ".";
+          }
         }
 
-        var bsw = '', bsh = '';
-        if (window.innerWidth){
-          bsw = window.innerWidth;
-          bsh = window.innerHeight;
-        }
-        else if (document.documentElement){
-          bsw = document.documentElement.clientWidth;
-          bsh = document.documentElement.clientHeight;
-        }
-        else if (document.body){
-          bsw = document.body.clientWidth;
-          bsh = document.body.clientHeight;
-        }
-        if (bsw != '' && bsh != ''){
-          $scope.infoSize = "Screen resolution :" + screenResolution + " , color depth :" + screenColorDepth + " , browser size :" + bsw + ' x ' + bsh + ".";
-        }
         // hasUserMedia
-        var hasUserMedia = function hasUserMedia() {
+        var getInfoUserMedia = function getInfoUserMedia() {
+          navigator.getUserMedia = (navigator.getUserMedia ||
+             navigator.webkitGetUserMedia ||
+             navigator.mozGetUserMedia ||
+             navigator.msGetUserMedia);
 
-            navigator.getUserMedia = (navigator.getUserMedia ||
-               navigator.webkitGetUserMedia ||
-               navigator.mozGetUserMedia ||
-               navigator.msGetUserMedia);
-
-            if (window.hasUserMedia()) {
-                $scope.infoUsermedia = "getUserMedia supported by the browser.";
-            } else {
-                $scope.infoUsermedia = "getUserMedia is not supported by the browser</em>";
-            }
+          if (window.hasUserMedia()) {
+              $scope.infoUsermedia = "getUserMedia supported by the browser.";
+          } else {
+              $scope.infoUsermedia = "getUserMedia is not supported by the browser</em>";
+          }
         };
-        // hasGeolocation
-        var hasGeolocation = function hasGeolocation() {
 
+        // hasGeolocation
+        var getInfoGeolocation = function getInfoGeolocation() {
           if (navigator.geolocation) {
               $scope.infoGps = "Geolocation supported by the browser.";
-              navigator.geolocation.getCurrentPosition(showPosition, showGeolocError);
+              navigator.geolocation.getCurrentPosition(getGeolocPosition, getGeolocError);
           } else {
               $scope.infoGps = "Geolocation is not supported by the browser.";
           }
-
         };
 
-        function showPosition(position) {
-            $scope.infoGps += "Lat:" + position.coords.latitude +
-            "Long:" + position.coords.longitude;
+        function getGeolocPosition(position) {
+          $scope.infoGps += "Lat:" + position.coords.latitude +
+          "Long:" + position.coords.longitude;
         }
 
-        function showGeolocError(error) {
+        function getGeolocError(error) {
           switch(error.code) {
             case error.PERMISSION_DENIED:
                 $scope.infoGps += " User denied the request for Geolocation."
@@ -90,11 +101,11 @@ angular.module('artmobilis').controller('AProposController',
                 $scope.infoGps += " An unknown error occurred."
                 break;
           }
-}
+        }
 
         $scope.$on('$ionicView.enter', function (e) {
-            hasUserMedia();
-            hasGeolocation();
+            getInfoUserMedia();
+            getInfoGeolocation();
 
         });
 
