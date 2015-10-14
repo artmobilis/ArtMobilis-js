@@ -1,7 +1,7 @@
-# Art Mobilis - Prototype ionic/angularjs/openstreetmap/ar
+# Art Mobilis - A public space augmented reality artistic route javascript application
 
 ##Quick launch 
-From the Cordova folder,  execute `ionic serve` into a console.
+From the root folder,  execute `ionic serve` into a console.
 If you don't how to do a quick launch, read later in the page.
 
 ##Project files
@@ -34,7 +34,7 @@ See : https://github.com/nodejs/node-v0.x-archive/wiki/Installing-Node.js-via-pa
 
     sudo npm install -g cordova ionic
 
-####Before starting you need to manually link node to nodejs
+####Before starting you may need to manually link node to nodejs
 
     sudo ln -s /usr/bin/nodejs /usr/bin/node
 
