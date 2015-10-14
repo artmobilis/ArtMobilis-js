@@ -1,31 +1,32 @@
 <ion-view title="Réalité augmentée Image">
 
-    <ion-nav-buttons side="left">
-        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-    </ion-nav-buttons>
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
 
-    <!--  my new UI -->
-    <ion-content data-tap-disabled="true">
-        <video id="webcam" width="640" height="480" style="display:none;"></video>
-        <div style=" width:640px;height:480px;margin: 10px auto;">
-            <canvas id="canvas2d" width="640" height="480" class="overlapcanvas"></canvas>
-            <canvas id="canvas3d" width="640" height="480" class="overlapcanvas"></canvas>
-            <canvas hidden id="container" width="480" height="640" style=" float: left; border: solid 1px black; background: green;"></canvas>
-            <div id="no_rtc" class="alert alert-error" style="display:none;"></div>
-            <div id="log" class="alert alert-info"></div>
-        </div>
-        <br>
-        The time is : <span id="timeproc"></span><br>
-        <span id="matchingresult"></span><br>
-        <div id="pose1"></div>
-<!--        <div>
-                Reference name:<input type="text" ng-model="refname" required>
-                <button class="button" ng-click="train_pattern();">Train</button>
-            </div> --> 
-        <img  id="trained0" src="img/trained/gvf.jpg" width="100">
-        <img  id="trained1" src="img/trained/vsd1.jpg" width="100">
-        <img  id="trained2" src="img/trained/3Dtricart1.jpg" width="100">
+  <!--  my new UI -->
+  <ion-content data-tap-disabled="true">
+    <webcam id="webcam" style="position: absolute;display: block!important;top: -9999px;left: -9999px" cameraid="1" channel="channel" on-stream="onStream(stream)" on-streaming="onSuccess()" on-error="onError(err)"></webcam>
+    <canvas id="canvas2d" width="640" height="480" class="overlapcanvas"></canvas>
+    <canvas id="canvas3d" width="640" height="480" class="overlapcanvas"></canvas>
+    <canvas hidden id="container" width="480" height="640" style=" float: left; border: solid 1px black; background: green;"></canvas>
+    <div id="no_rtc" class="alert alert-error" style="display:none;"></div>
+    <div id="log" class="alert alert-info"></div>
 
-    </ion-content>
+    <br>
+    The time is : <span id="timeproc"></span><br>
+    <span id="matchingresult"></span><br>
+    <div id="pose1"></div>
+    <!--        <div>
+                    Reference name:<input type="text" ng-model="refname" required>
+                    <button class="button" ng-click="train_pattern();">Train</button>
+                </div> -->
+    <img id="trained0" src="img/trained/gvf.jpg" width="100">
+    <img id="trained1" src="img/trained/vsd1.jpg" width="100">
+    <img id="trained2" src="img/trained/3Dtricart1.jpg" width="100">
+    <video id="videoTexture" autoplay loop style="display:none">
+      <source src="video/video.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+    </video>
+  </ion-content>
 
 </ion-view>
