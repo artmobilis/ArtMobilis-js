@@ -53,14 +53,16 @@ angular.module('artmobilis').controller('ARImageController',
             startAnimation();
         });
         $scope.$on("$ionicView.loaded", function (e) {
-            // lets do some fun
-            canvas2d = document.getElementById('canvas2d');
-            canvas3D = document.getElementById('canvas3d');
-            container = document.getElementById('container');
-            timeproc = document.getElementById('timeproc');
-            matchingresult = document.getElementById('matchingresult');
+            setTimeout(function () {
+                // canvas2d
+                canvas2d = document.getElementById('canvas2d');
+                canvas3D = document.getElementById('canvas3d');
+                container = document.getElementById('container');
+                timeproc = document.getElementById('timeproc');
+                matchingresult = document.getElementById('matchingresult');
 
-            main_app();
+                main_app();
+            }, 500);
         });
 
         $scope.$on("$ionicView.beforeLeave", function (e) {
