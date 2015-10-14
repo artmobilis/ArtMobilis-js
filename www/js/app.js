@@ -5,7 +5,11 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('artmobilis', ['ionic', 'leaflet-directive', 'ngCordova', 'igTruncate', 'webcam'])
 
-  .run(function($ionicPlatform) {
+// whitelist for images
+  .config(function ($compileProvider) {
+      $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
+  })
+  .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function() {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
