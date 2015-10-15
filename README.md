@@ -34,7 +34,10 @@ See : https://github.com/nodejs/node-v0.x-archive/wiki/Installing-Node.js-via-pa
 
     sudo npm install -g cordova ionic
 
-####Before starting you may need to manually link node to nodejs
+####Before starting you may need to (manually) link node to nodejs
+NOT TESTED : Under debian (and derivative?) install nodejs-legacy , `$ sudo apt-get install nodejs-legacy` in order to have the node binary.
+
+Or use the ugly (but working) link way :
 
     sudo ln -s /usr/bin/nodejs /usr/bin/node
 
