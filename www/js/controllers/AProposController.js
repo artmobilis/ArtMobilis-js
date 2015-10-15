@@ -67,7 +67,7 @@ angular.module('artmobilis').controller('AProposController',
           if (window.hasUserMedia()) {
               $scope.infoUsermedia = "getUserMedia supported by the browser.";
           } else {
-              $scope.infoUsermedia = "getUserMedia is not supported by the browser</em>";
+              $scope.infoUsermedia = "getUserMedia is not supported by the browser";
           }
         };
 
@@ -103,9 +103,15 @@ angular.module('artmobilis').controller('AProposController',
           }
         }
 
+        // platform
+        var getInfoPlatform = function getInfoPlatform() {
+            $scope.infoPlatform = "Platform:" + ionic.Platform.platform();
+        };
+
         $scope.$on('$ionicView.enter', function (e) {
             getInfoUserMedia();
             getInfoGeolocation();
+            getInfoPlatform();
 
         });
 
