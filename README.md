@@ -13,7 +13,7 @@ If you don't how to do a quick launch, read later in the page.
 ![Capture](assets/artmobilis-ar.jpg)
 ![Capture](assets/artmobilis-ios-android.jpg)
 
-##Before you can run or devellop
+##Before you can run or develop
 
 ###Windows 7 /8 / 10
 
@@ -21,7 +21,7 @@ Install following software
 - [nodejs](http://nodejs.org)
 - [cordova](http://cordova.apache.org)
 
-Install ionic for cordova :
+Install ionic and cordova :
 
     npm install -g cordova ionic
 
@@ -30,7 +30,7 @@ Install ionic for cordova :
 ####Install Node.js
 See : https://github.com/nodejs/node-v0.x-archive/wiki/Installing-Node.js-via-package-manager
 
-####Install ionic for cordova :
+####Install ionic and cordova :
 
     sudo npm install -g cordova ionic
 
@@ -40,6 +40,18 @@ NOT TESTED : Under debian (and derivative?) install nodejs-legacy , `$ sudo apt-
 Or use the ugly (but working) link way :
 
     sudo ln -s /usr/bin/nodejs /usr/bin/node
+
+###Mac OS
+
+Install following software 
+- [nodejs](http://nodejs.org) v4.2.1
+- [cordova](http://cordova.apache.org)
+- Emulator : sudo npm install -g ios-sim
+- Devices : sudo npm install -g ios-deploy
+
+Install ionic and cordova :
+
+    sudo npm install -g cordova ionic
 
 Now you can run and dev for ArtMobilis .... let's test if everything is allright
 
@@ -55,7 +67,13 @@ nota: you can test another model : sidemenu , tabs , blank
     
     ionic serve
 
-###Add Android platform
+###ios platform
+
+	ionic platform add ios
+	ionic build ios
+	ionic run ios
+
+###Android platform
 
 	ionic platform add android
 	ionic build android
