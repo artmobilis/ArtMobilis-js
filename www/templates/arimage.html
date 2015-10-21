@@ -7,8 +7,8 @@
   <!--  my new UI -->
   <ion-content data-tap-disabled="true">
     <webcam id="webcam" style="position: absolute;display: block!important;top: -9999px;left: -9999px" cameraid="1" channel="channel" on-stream="onStream(stream)" on-streaming="onSuccess()" on-error="onError(err)"></webcam>
-    <canvas id="canvas2d" width="640" height="480" class="overlapcanvas"></canvas>
-    <canvas id="canvas3d" width="640" height="480" class="overlapcanvas"></canvas>
+    <canvas id="canvas2d"></canvas>
+    <canvas id="canvas3d"></canvas>
     <canvas hidden id="container" width="480" height="640" style=" float: left; border: solid 1px black; background: green;"></canvas>
     <div id="no_rtc" class="alert alert-error" style="display:none;"></div>
     <div id="log" class="alert alert-info"></div>

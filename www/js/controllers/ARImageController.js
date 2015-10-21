@@ -16,6 +16,7 @@ angular.module('artmobilis').controller('ARImageController',
       LocationsService,
       InstructionsService
       ) {
+        var imWidth = 640, imHeight = 480; // size of pipeline processing
 
         $scope.isVideo = false;
         $scope.initialized = false;
@@ -23,8 +24,8 @@ angular.module('artmobilis').controller('ARImageController',
         $scope.video = null;
         // this has to be done BEFORE webcam authorization
         $scope.channel = {
-            videoHeight: 800,
-            videoWidth: 600,
+            videoHeight: imHeight,
+            videoWidth: imWidth,
             video: null // Will reference the video element on success
         };
         $scope.video = $scope.channel.video;
@@ -61,7 +62,7 @@ angular.module('artmobilis').controller('ARImageController',
                 timeproc = document.getElementById('timeproc');
                 matchingresult = document.getElementById('matchingresult');
 
-                main_app();
+                main_app($scope.video.width, $scope.video.height);
             }, 500);
         });
 
@@ -70,7 +71,7 @@ angular.module('artmobilis').controller('ARImageController',
             $scope.$broadcast('STOP_WEBCAM');
         });
 
-        $scope.channel = {};
+        //$scope.channel = {};
         $scope.onError = function (err) {
             $scope.infos = "webcam onError";
             //console.log("webcam onError");
@@ -115,7 +116,7 @@ angular.module('artmobilis').controller('ARImageController',
         })();
 
         // JSfeat
-        var gui, options, ctx, canvasWidth, canvasHeight;
+        var gui, options, ctx;
         var img_u8, img_u8_smooth, screen_corners, num_corners, screen_descriptors;
         var pattern_corners, pattern_descriptors, pattern_preview;
         var matches, homo3x3, match_mask;
@@ -469,16 +470,25 @@ angular.module('artmobilis').controller('ARImageController',
         /////////////////////
 
         function main_app(videoWidth, videoHeight) {
-            canvasWidth = canvas2d.width;
-            canvasHeight = canvas2d.height;
+
+            //pb first time 300*150 by default
+            // here we will eed to make something clever to resize canvas so that
+            // 1. it fulfill screen
+            // 2. it keeps capture proportion
+            // certainly: rescale to fit border ad center in other coord
+            canvas2d.width = canvas3d.width = window.innerWidth;
+            canvas2d.height = canvas3d.height = window.innerHeight;
+            //canvas2d.width = canvas3d.width = imWidth;
+            //canvas2d.height = canvas3d.height = imHeight;
+
             ctx = canvas2d.getContext('2d');
 
             ctx.fillStyle = "rgb(0,255,0)";
             ctx.strokeStyle = "rgb(0,255,0)";
 
             // JSfeat Orb detection+matching part
-            img_u8 = new jsfeat.matrix_t(640, 480, jsfeat.U8_t | jsfeat.C1_t);
-            img_u8_smooth = new jsfeat.matrix_t(640, 480, jsfeat.U8_t | jsfeat.C1_t);            // after blur
+            img_u8 = new jsfeat.matrix_t(imWidth, imHeight, jsfeat.U8_t | jsfeat.C1_t);
+            img_u8_smooth = new jsfeat.matrix_t(imWidth, imHeight, jsfeat.U8_t | jsfeat.C1_t);            // after blur
 
             // we will limit to 500 strongest points
             screen_descriptors = new jsfeat.matrix_t(32, 500, jsfeat.U8_t | jsfeat.C1_t);
@@ -545,7 +555,7 @@ angular.module('artmobilis').controller('ARImageController',
 
             // for 3d projection
             scene2 = new THREE.Scene();
-            camera2 = new THREE.PerspectiveCamera(40, canvas2d.width / canvas2d.height, 1, 1000);
+            camera2 = new THREE.PerspectiveCamera(40, canvas2d.width / canvas2d.height, 1, 1000); // be carefull, projection only works if we keep width>heigth (landscape)
             scene2.add(camera2);
         };
 
@@ -640,10 +650,22 @@ angular.module('artmobilis').controller('ARImageController',
             var hiddenCanvas = document.createElement('canvas');
             hiddenCanvas.width = $scope.video.width;
             hiddenCanvas.height = $scope.video.height;
-            var ctx = hiddenCanvas.getContext('2d');
-            ctx.drawImage($scope.video, 0, 0, $scope.video.width, $scope.video.height);
-            return ctx.getImageData(x, y, w, h);
+            var hctx = hiddenCanvas.getContext('2d');
+            hctx.drawImage($scope.video, 0, 0, $scope.video.width, $scope.video.height);
+            return hctx.getImageData(x, y, w, h);
         };
+
+        // put ImgData in a hidden canvas to then write it with resizing on canvas
+        var resizeImData = function ( canvas , imgData ) {
+            var hiddenCanvas = document.createElement('canvas');
+            hiddenCanvas.width = imWidth;
+            hiddenCanvas.height = imHeight;
+            var hctx = hiddenCanvas.getContext('2d');
+            var cctx = canvas.getContext('2d');
+            hctx.putImageData(imgData, 0, 0);
+            cctx.drawImage(hiddenCanvas,0,0,canvas.width, canvas.height);
+        };
+
         function tick() {
             stat.new_frame();
             $scope.video = $scope.channel.video;
@@ -651,13 +673,13 @@ angular.module('artmobilis').controller('ARImageController',
             if ($scope.video) {
                 if ($scope.video.width > 0) {
 
-                    var videoData = getVideoData(0, 0, 640, 480);
+                    var videoData = getVideoData(0, 0, imWidth, imHeight);
                     ctx.putImageData(videoData, 0, 0);
 
-                    var imageData = ctx.getImageData(0, 0, 640, 480);
+                    var imageData = ctx.getImageData(0, 0, imWidth, imHeight);
 
                     stat.start("grayscale");
-                    jsfeat.imgproc.grayscale(imageData.data, 640, 480, img_u8);
+                    jsfeat.imgproc.grayscale(imageData.data, imWidth, imHeight, img_u8);
                     stat.stop("grayscale");
 
                     stat.start("gauss blur");
@@ -677,7 +699,7 @@ angular.module('artmobilis').controller('ARImageController',
 
                     // render result back to canvas
                     var data_u32 = new Uint32Array(imageData.data.buffer);
-                    render_corners(screen_corners, num_corners, data_u32, 640);
+                    render_corners(screen_corners, num_corners, data_u32, imWidth);
 
                     // render pattern and matches
                     var num_matches = [];
@@ -705,10 +727,10 @@ angular.module('artmobilis').controller('ARImageController',
 
                     // display last detected pattern
                     if (pattern_preview[current_pattern]) {
-                        render_mono_image(pattern_preview[current_pattern].data, data_u32, pattern_preview[current_pattern].cols, pattern_preview[current_pattern].rows, 640);
+                        render_mono_image(pattern_preview[current_pattern].data, data_u32, pattern_preview[current_pattern].cols, pattern_preview[current_pattern].rows, imWidth);
                     }
 
-                    ctx.putImageData(imageData, 0, 0);
+                    resizeImData(canvas2d,imageData);
 
                     // display matching result and 3d when detection
                     if (num_matches[current_pattern]) { // last detected
@@ -741,10 +763,11 @@ angular.module('artmobilis').controller('ARImageController',
         function updateScenes(corners) {
             var corners, corner, pose, i;
 
+            var scaleX = canvas2d.width / imWidth, scaleY = canvas2d.height / imHeight;
             for (i = 0; i < corners.length; ++i) {
                 corner = corners[i];
-                corner.x = corner.x - (canvas2d.width / 2);
-                corner.y = (canvas2d.height / 2) - corner.y;
+                corner.x = corner.x * scaleX - (canvas2d.width / 2);
+                corner.y = (canvas2d.height / 2) - corner.y*scaleY;
             }
 
             stat.start("Posit");
@@ -811,6 +834,7 @@ angular.module('artmobilis').controller('ARImageController',
         function render_matches(ctx, matches, count) {
             if (current_pattern == -1) return;
 
+            var scaleX = canvas2d.width / imWidth, scaleY = canvas2d.height / imHeight;
             for (var i = 0; i < count; ++i) {
                 var m = matches[i];
                 var s_kp = screen_corners[m.screen_idx];
@@ -821,8 +845,8 @@ angular.module('artmobilis').controller('ARImageController',
                     ctx.strokeStyle = "rgb(255,0,0)";
                 }
                 ctx.beginPath();
-                ctx.moveTo(s_kp.x, s_kp.y);
-                ctx.lineTo(p_kp.x * 0.5, p_kp.y * 0.5); // our preview is downscaled
+                ctx.moveTo(s_kp.x * scaleX, s_kp.y * scaleY);
+                ctx.lineTo(p_kp.x * 0.5 * scaleX, p_kp.y * 0.5 * scaleY); // our preview is downscaled
                 ctx.lineWidth = 1;
                 ctx.stroke();
             }
@@ -830,16 +854,17 @@ angular.module('artmobilis').controller('ARImageController',
 
         function render_pattern_shape(ctx) {
             // get the projected pattern corners
+            var scaleX = canvas2d.width / imWidth, scaleY = canvas2d.height / imHeight;
             shape_pts = tCorners(homo3x3[current_pattern].data, pattern_preview[current_pattern].cols * 2, pattern_preview[current_pattern].rows * 2);
 
             ctx.strokeStyle = "rgb(0,255,0)";
             ctx.beginPath();
 
-            ctx.moveTo(shape_pts[0].x, shape_pts[0].y);
-            ctx.lineTo(shape_pts[1].x, shape_pts[1].y);
-            ctx.lineTo(shape_pts[2].x, shape_pts[2].y);
-            ctx.lineTo(shape_pts[3].x, shape_pts[3].y);
-            ctx.lineTo(shape_pts[0].x, shape_pts[0].y);
+            ctx.moveTo(shape_pts[0].x * scaleX, shape_pts[0].y * scaleY);
+            ctx.lineTo(shape_pts[1].x * scaleX, shape_pts[1].y * scaleY);
+            ctx.lineTo(shape_pts[2].x * scaleX, shape_pts[2].y * scaleY);
+            ctx.lineTo(shape_pts[3].x * scaleX, shape_pts[3].y * scaleY);
+            ctx.lineTo(shape_pts[0].x * scaleX, shape_pts[0].y * scaleY);
 
             ctx.lineWidth = 4;
             ctx.stroke();
@@ -873,11 +898,5 @@ angular.module('artmobilis').controller('ARImageController',
         this.timeproc = function timeproc() {
             return timeproc;
         };
-
-        //$(window).unload(function () {
-        //    video.pause();
-        //    video.src = null;
-        //});
-
 
     }]);
