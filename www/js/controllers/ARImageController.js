@@ -17,6 +17,7 @@ angular.module('artmobilis').controller('ARImageController',
       InstructionsService
       ) {
         var imWidth = 640, imHeight = 480; // size of pipeline processing
+        var debugging=false;
 
         $scope.isVideo = false;
         $scope.initialized = false;
@@ -478,8 +479,10 @@ angular.module('artmobilis').controller('ARImageController',
             // certainly: rescale to fit border ad center in other coord
             canvas2d.width = canvas3d.width = window.innerWidth;
             canvas2d.height = canvas3d.height = window.innerHeight;
-            //canvas2d.width = canvas3d.width = imWidth;
-            //canvas2d.height = canvas3d.height = imHeight;
+            if (debugging){
+                canvas2d.width = canvas3d.width = imWidth;
+                canvas2d.height = canvas3d.height = imHeight;
+            }
 
             ctx = canvas2d.getContext('2d');
 
