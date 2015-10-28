@@ -62,7 +62,7 @@ angular.module('artmobilis').controller('ARImageController',
                 timeproc = document.getElementById('timeproc');
                 matchingresult = document.getElementById('matchingresult');
 
-                main_app($scope.video.width, $scope.video.height);
+                main_app(imWidth, imHeight);
             }, 500);
         });
 
