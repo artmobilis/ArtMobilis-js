@@ -38,7 +38,7 @@ angular.module('artmobilis').controller('MapController',
         });
         $scope.loadPaths = function loadPaths() {
             console.log("loadPaths");
-            $http.get("json/parcours.json").success(function (data) {
+            $http.get("json/itineraire.json").success(function (data) {
                 console.log("loadPaths ok" + data);
                 $scope.parcours = data;
                 $scope.markers = data;
@@ -50,7 +50,7 @@ angular.module('artmobilis').controller('MapController',
                             // important check that this is objects own property 
                             // not from prototype prop inherited
                             if (obj.hasOwnProperty(prop)) {
-                                console.log(prop + " = " + obj[prop]);
+                                //console.log(prop + " = " + obj[prop]);
                                 if (prop === "icon") obj[prop] = eval(obj[prop]);
                             }
                         }
@@ -75,7 +75,7 @@ angular.module('artmobilis').controller('MapController',
             if (destinationUrl === 'undefined') {
                 console.log("popupClick url undefined");
             } else {
-                // $location.path(destinationUrl);
+                $location.path(destinationUrl);
             }
         }
         // icones markers
