@@ -1,5 +1,8 @@
 {
   "p1": {
+    "id": 0,
+    "lat": 43.710,
+    "lng": 7.2868098,
     "color": "red",
     "weight": 8,
     "latlngs": [
@@ -22,6 +25,9 @@
     "vignette": "img/vignettes/hublot.jpg"
   },
   "p2": {
+    "id": 1,
+    "lat": 43.713,
+    "lng": 7.2868098,
     "color": "green",
     "weight": 8,
     "latlngs": [

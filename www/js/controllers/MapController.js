@@ -26,7 +26,7 @@ angular.module('artmobilis').controller('MapController',
             },
             defaults: {
                 tileLayer: 'http://tile.stamen.com/watercolor/{z}/{x}/{y}.png',
-                maxZoom: 18,
+                maxZoom: 20,
                 zoomControlPosition: 'bottomleft'
             },
             parcours: {}
@@ -36,42 +36,27 @@ angular.module('artmobilis').controller('MapController',
             console.log("loaded");
             $scope.loadPaths();
         });
-        /*
-                   $scope.markers[locationKey] = {
-                lat: poi.lat,
-                lng: poi.lng,
-                message: '<span><img ng-src="' + poi.vignette + '"></img><h3>' + poi.name + '</h3><br />' + poi.sousTitre + '</span><br />',
-                icon: eval(poi.icon),
-                focus: true,
-                draggable: false,
-                getMessageScope: function () { return $scope; }
-            };
-        */
         $scope.loadPaths = function loadPaths() {
             console.log("loadPaths");
-            $http.get('json/parcours.json').success(function (data) {
-                console.log("loadPaths ok" +  data);
-
-                $scope.parcours = {};
-                $scope.markers = {};
-                // ajout markers
-                for (var i = 0; i < data.length; i++) {
-                    var parcours = data[i].latlngs;
-                    var latlong = parcours[0];
-                    if (latlong[0] !== undefined) {
-                        $scope.markers[i] = {
-                            lat: latlong[1],
-                            lng: latlong[0],
-                            message: "<span><h3>" + data[i].message + "</h3>",
-                            icon: local_icons.purple_icon,
-                            focus: true,
-                            draggable: false,
-                            getMessageScope: function () { return $scope; }
-                        };
+            $http.get("json/parcours.json").success(function (data) {
+                console.log("loadPaths ok" + data);
+                $scope.parcours = data;
+                $scope.markers = data;
+                // modify marker data
+                for (var key in $scope.markers) {
+                    if ($scope.markers.hasOwnProperty(key)) {
+                        var obj = $scope.markers[key];
+                        for (var prop in obj) {
+                            // important check that this is objects own property 
+                            // not from prototype prop inherited
+                            if (obj.hasOwnProperty(prop)) {
+                                console.log(prop + " = " + obj[prop]);
+                                if (prop === "icon") obj[prop] = eval(obj[prop]);
+                            }
+                        }
+                        obj.focus = true;
                     }
                 }
-                
-                $scope.parcours = data;
             });
         };
 
@@ -96,14 +81,7 @@ angular.module('artmobilis').controller('MapController',
         // icones markers
         var local_icons = {
             default_icon: {},
-            text_icon: {
-                type: 'div',
-                iconSize: [230, 0],
-                html: 'Using <strong>Bold text as an icon</strong>',
-                popupAnchor: [0, 0]
-            },
             ici_icon: {
-                backgroundColor: 'green',
                 iconSize: [138, 95],
                 shadowSize: [50, 64],
                 iconAnchor: [22, 94],
@@ -111,31 +89,38 @@ angular.module('artmobilis').controller('MapController',
             },
             blue_icon: {
                 iconUrl: 'img/icones/marker-icon-blue.png',
-                shadowUrl: 'img/icones/markers_shadow.png'
+                shadowUrl: 'img/icones/markers_shadow.png',
+                iconAnchor: [11, 38]
             },
             orange_icon: {
                 iconUrl: 'img/icones/marker-icon-orange.png',
-                shadowUrl: 'img/icones/markers_shadow.png'
+                shadowUrl: 'img/icones/markers_shadow.png',
+                iconAnchor: [11, 38]
             },
             green_icon: {
                 iconUrl: 'img/icones/marker-icon-green.png',
-                shadowUrl: 'img/icones/markers_shadow.png'
+                shadowUrl: 'img/icones/markers_shadow.png',
+                iconAnchor: [11, 38]
             },
             grey_icon: {
                 iconUrl: 'img/icones/marker-icon-grey.png',
-                shadowUrl: 'img/icones/markers_shadow.png'
+                shadowUrl: 'img/icones/markers_shadow.png',
+                iconAnchor: [11, 38]
             },
             red_icon: {
                 iconUrl: 'img/icones/marker-icon-red.png',
-                shadowUrl: 'img/icones/markers_shadow.png'
+                shadowUrl: 'img/icones/markers_shadow.png',
+                iconAnchor: [11, 38]
             },
             purple_icon: {
                 iconUrl: 'img/icones/marker-icon-purple.png',
-                shadowUrl: 'img/icones/markers_shadow.png'
+                shadowUrl: 'img/icones/markers_shadow.png',
+                iconAnchor: [11, 38]
             },
             yellow_icon: {
                 iconUrl: 'img/icones/marker-icon-yellow.png',
-                shadowUrl: 'img/icones/markers_shadow.png'
+                shadowUrl: 'img/icones/markers_shadow.png',
+                iconAnchor: [11, 38]
             }
         };
         $scope.icons = local_icons;
