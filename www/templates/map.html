@@ -4,21 +4,17 @@
     <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
 
-  <ion-nav-buttons side="right">
-  	<a href="#/app/ar">Voir en réalité augmentée</a>
-  </ion-nav-buttons>
   <ion-nav-buttons side="primary">
     <button ng-click="locate();" class="button button-icon icon ion-pinpoint"></button>
   </ion-nav-buttons>
 
   <ion-content data-tap-disabled="true">
 
-    <leaflet defaults="map.defaults" legend="legend" center="map.center" height="90%" markers="map.markers" ng-if="map"></leaflet>
+    <leaflet legend="legend" defaults="defaults" height="90%" markers="markers" paths="parcours" center="center"></leaflet>
     <p>
-    Tuiles de la carte par <a href="http://stamen.com">Stamen Design</a>, sous license <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.
-    <br />
-    Données par <a href="http://openstreetmap.org">OpenStreetMap</a>, sous license <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
+      Tuiles de la <a href="http://openstreetmap.org">carte OpenStreetMap</a> par <a href="http://stamen.com">Stamen Design</a> (license <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>.
     </p>
+    <button ng-click="loadPaths()">Recharger</button>
   </ion-content>
 
 </ion-view>
