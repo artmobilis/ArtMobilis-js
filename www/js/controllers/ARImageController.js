@@ -30,9 +30,6 @@ angular.module('artmobilis').controller('ARImageController',
             video: null // Will reference the video element on success
         };
         $scope.video = $scope.channel.video;
-        var canvas2d;
-        var canvas3D;
-        var container;
         var timeproc;
         var matchingresult;
 
@@ -56,7 +53,7 @@ angular.module('artmobilis').controller('ARImageController',
         });
         $scope.$on("$ionicView.loaded", function (e) {
             setTimeout(function () {
-                // canvas2d
+                // canvas2d ,make all global variables
                 canvas2d = document.getElementById('canvas2d');
                 canvas3D = document.getElementById('canvas3d');
                 container = document.getElementById('container');
@@ -118,14 +115,12 @@ angular.module('artmobilis').controller('ARImageController',
 
         // JSfeat
         var gui, options, ctx;
-        var img_u8, img_u8_smooth, screen_corners, num_corners, screen_descriptors;
+        var img_u8_smooth, screen_corners, num_corners, screen_descriptors;
         var pattern_corners, pattern_descriptors, pattern_preview;
         var matches, homo3x3, match_mask;
         var num_train_levels = 4;
         var maxCorners = 2000, maxMatches = 2000;
-        var trained_8u;
         var nb_trained = 0, current_pattern = -1;
-        var templateX = 400, templateY = 600;
 
         // ARuco
         var posit;
@@ -339,38 +334,12 @@ angular.module('artmobilis').controller('ARImageController',
             return pt;
         }
 
+
         /////////////////////
         // Pattern Training
         /////////////////////
 
-        // using <img>
-        var load_trained_patterns = function (name) {
-            var img2 = document.getElementById(name);
-            var contx = container.getContext('2d');
-            contx.drawImage(img2, 0, 0, templateX, templateY);
-            var imageData = contx.getImageData(0, 0, templateX, templateY);
-
-            trained_8u = new jsfeat.matrix_t(templateX, templateY, jsfeat.U8_t | jsfeat.C1_t);
-            jsfeat.imgproc.grayscale(imageData.data, templateX, templateY, trained_8u);
-            trainpattern(trained_8u); // le pattern doit etre plus grand que 512*512 dans au moins une dimension (sinon pas de rescale et rien ne se passe)
-        };
-
-        // using direct link
-        var load_trained_patterns2 = function (name) {
-            img = new Image();
-            img.onload = function () {
-                var contx = container.getContext('2d');
-                contx.drawImage(img, 0, 0, templateX, templateY);
-
-                var imageData = contx.getImageData(0, 0, templateX, templateY);
-                trained_8u = new jsfeat.matrix_t(templateX, templateY, jsfeat.U8_t | jsfeat.C1_t);
-                jsfeat.imgproc.grayscale(imageData.data, templateX, templateY, trained_8u);
-                trainpattern(trained_8u); // le pattern doit etre plus grand que 512*512 dans au moins une dimension (sinon pas de rescale et rien ne se passe)
-            }
-            img.src = name;
-        };
-
-        $scope.train_pattern = function () {
+        train_pattern = function () {
             trainpattern(img_u8);
         };
 
