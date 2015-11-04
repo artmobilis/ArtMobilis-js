@@ -7,6 +7,7 @@ angular.module('artmobilis').controller('ARImageController',
     '$ionicPopup',
     'LocationsService',
     'InstructionsService',
+    'globals',
     function (
       $scope,
       $cordovaGeolocation,
@@ -14,8 +15,10 @@ angular.module('artmobilis').controller('ARImageController',
       $ionicModal,
       $ionicPopup,
       LocationsService,
-      InstructionsService
+      InstructionsService,
+      globals
       ) {
+        console.log(globals.config);
         var imWidth = 640, imHeight = 480; // size of pipeline processing
 
         $scope.isVideo = false;
