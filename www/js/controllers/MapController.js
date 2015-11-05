@@ -82,7 +82,7 @@ angular.module('artmobilis').controller('MapController',
         $scope.itinerary = globals.journey.properties.itinerary.paths;
 
         $scope.$on("$ionicView.loaded", function (e) {
-            console.log("loaded");
+
         });
 
         /**
@@ -130,7 +130,7 @@ angular.module('artmobilis').controller('MapController',
                   $scope.markers.now = {
                       lat: position.coords.latitude,
                       lng: position.coords.longitude,
-                      message: "You are here",
+                      message: "Vous êtes ici",
                       icon: local_icons.here_icon,
                       focus: true,
                       draggable: false
