@@ -5,6 +5,8 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('artmobilis', ['ionic', 'leaflet-directive', 'ngCordova', 'igTruncate', 'webcam'])
 
+  .constant('APP_VERSION', '0.1.20151105')
+
 // whitelist for images
   .config(function ($compileProvider) {
       $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);

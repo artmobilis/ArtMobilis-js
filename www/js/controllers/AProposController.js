@@ -3,24 +3,16 @@ angular.module('artmobilis').controller('AProposController',
     '$location',
     '$cordovaGeolocation',
     '$stateParams',
-    'globals',
+    'APP_VERSION',
     function (
       $scope,
       $location,
       $cordovaGeolocation,
       $stateParams,
-      globals
+      APP_VERSION
       ) {
-        $scope.$on("$ionicView.loaded", function (e) {
-          // get the config
-          console.log(globals.config);
-          console.log(globals.journey);
-        });
-
-        $scope.$on("$ionicView.beforeLeave", function (e) {
-
-        });
         
+        $scope.APP_VERSION = "Version : " + APP_VERSION;
         // OnLine/Offline
         {
           if(navigator.onLine){ // always respond true under firefox41 + linux
@@ -117,6 +109,14 @@ angular.module('artmobilis').controller('AProposController',
             getInfoUserMedia();
             getInfoGeolocation();
             getInfoPlatform();
+
+        });
+
+        $scope.$on("$ionicView.loaded", function (e) {
+
+        });
+
+        $scope.$on("$ionicView.beforeLeave", function (e) {
 
         });
 
