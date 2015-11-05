@@ -22,8 +22,8 @@
       <ion-list>
         <ion-item href="#/app/accueil" menu-close>Accueil</ion-item>
         <ion-item href="#/app/carte" menu-close>Carte</ion-item>
-        <ion-item href="#/app/ar" menu-close>Réalité augmentée</ion-item>
-        <ion-item href="#/app/arimage" menu-close>Réalité augmentée image</ion-item>        
+        <ion-item href="#/app/ar" menu-close ng-show="getUserMedia">Réalité augmentée</ion-item>
+        <ion-item href="#/app/arimage" menu-close ng-show="getUserMedia">Réalité augmentée image</ion-item>        
         <ion-item href="#/app/about" menu-close>A propos</ion-item>
 
        <!-- <ion-item nav-clear menu-close ng-click="goTo(locationKey)" ng-repeat="(locationKey,location) in locations track by location.name">
