@@ -4,18 +4,43 @@
   </ion-nav-buttons>
     <ion-content class="padding">
 
-      <div class="item item-divider">A propos d'<b>Art Mobilis</b><br /></div>
+      <div class="item item-divider">A propos d'<span class="bold">Art Mobilis</span></div>
+      <div class="item item-text-wrap">
+        <ul class="contact-list">
+          <li>Art Mobilis : Un parcours urbain en réalité augmentée.</li>
+          <li><a href="https://sites.google.com/a/lehublot.net/artmobilis/">Présentation du projet Art Mobilis (Le Hublot, Nice)</a>.</li>
+          <li><a href="http://lehublot.net">Le Hublot</a> - <a href="http://www.openstreetmap.org/?mlat=43.7142&mlon=7.2890#map=13/43.7142/7.2890">16 rue de Roquebillière Nice</a></li>
+        </ul>
+      </div>
 
-      <span>Informations techniques:</span>
-      <ul class="apropos-techinfo-list">
-        <li><span id="appVersion" ng-bind="APP_VERSION"></span></li>
-        <li><span id="infoBrowser" ng-bind="infoBrowser"></span></li>
-        <li><span id="infoPlatform" ng-bind="infoPlatform"></span></li>
-        <li><span id="infoOnline" ng-bind="infoOnline"></span></li>
-        <li><span id="infoSize" ng-bind="infoSize"></span></li>
-        <li><span id="infoUsermedia" ng-bind="infoUsermedia"></span></li>
-        <li><span id="infoPps" ng-bind="infoGps"></span></li>
-      </ul>
+      <div class="item item-divider">Informations techniques</span></div>
+      <div class="item item-text-wrap">
+        <dl>
+          <dt>Version</dt>
+            <dd>{{appVersion}}</dd>
+          <dt>Plateforme</dt>
+            <dd>{{infoPlatform}}</dd>
+          <dt>Navigateur</dt>
+            <dd><span ng-show="online">Le navigateur est en ligne.</span><span ng-hide="online">Le navigateur n'est pas en ligne.</span></dd>
+            <dd>{{infoBrowser}}</dd>
+          <dt>Ecran</dt>
+            <dd>{{infoSize}}</dd>
+          <dt>UserMedia</dt>
+            <dd>{{infoUsermedia}}</dd>
+          <dt>GPS</dt>
+            <dd>{{infoGps}}</dd>
+        </dl>
+      </div>
+
+      <div class="item item-divider">Développement</span></div>
+      <div class="item item-text-wrap">
+        <ul>
+          <li><a href="https://github.com/artmobilis/ArtMobilis/wiki" title="Wiki">Wiki</a>
+          <li><a href="https://github.com/artmobilis" title="Team GitHub">Team GitHub</a>
+          <li><a href="https://github.com/artmobilis/ArtMobilis" title="Dépôt principal">Dépôt principal</a></li>
+          <li><a href="https://github.com/artmobilis/ArtMobilis-js" title="Dépôt application javascript">Dépôt application javascript</a></li>
+        </ul>
+      </div>
 
     </ion-content>
 </ion-view>
