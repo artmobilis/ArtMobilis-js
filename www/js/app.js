@@ -23,14 +23,30 @@ angular.module('artmobilis', ['ionic', 'leaflet-directive', 'ngCordova', 'igTrun
       if(window.StatusBar) {
         StatusBar.styleDefault();
       }
+
       // get config
       configFactory.then(
         function(data){
+          // store config
           globals.config = data;
+
+          // check if usermedia
+          globals.config.device = {};
+          globals.config.device.getUsermedia = false;
+          navigator.getUserMedia = (
+            navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia);
+
+          if (window.hasUserMedia()) {
+              globals.config.device.getUsermedia = true;
+          }
         },
         function(msg) {
           console.log(msg);
         });
+
       // get journey
       journeyFactory.then(
         function(data){
@@ -48,7 +64,8 @@ angular.module('artmobilis', ['ionic', 'leaflet-directive', 'ngCordova', 'igTrun
       .state('app', {
         url: "/app",
         abstract: true,
-        templateUrl: "templates/menu.html"
+        templateUrl: "templates/menu.html",
+        controller: "menuController"
       })
 
       .state('app.carte', {

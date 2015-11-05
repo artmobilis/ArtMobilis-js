@@ -4,14 +4,15 @@ angular.module('artmobilis').controller('aboutController',
     '$cordovaGeolocation',
     '$stateParams',
     'APP_VERSION',
+    'globals',
     function (
       $scope,
       $location,
       $cordovaGeolocation,
       $stateParams,
-      APP_VERSION
+      APP_VERSION,
+      globals
       ) {
-
         // version
         $scope.appVersion = APP_VERSION;
 
@@ -51,18 +52,11 @@ angular.module('artmobilis').controller('aboutController',
         }
 
         // hasUserMedia
-        var getInfoUserMedia = function getInfoUserMedia() {
-          navigator.getUserMedia = (navigator.getUserMedia ||
-             navigator.webkitGetUserMedia ||
-             navigator.mozGetUserMedia ||
-             navigator.msGetUserMedia);
-
-          if (window.hasUserMedia()) {
-              $scope.infoUsermedia = "getUserMedia est supporté par le navigateur.";
-          } else {
-              $scope.infoUsermedia = "getUserMedia n'est pas supporté par le navigateur.";
-          }
-        };
+        if (globals.config.device.getUsermedia) {
+            $scope.infoUsermedia = "getUserMedia est supporté par le navigateur.";
+        } else {
+            $scope.infoUsermedia = "getUserMedia n'est pas supporté par le navigateur.";
+        }
 
         // hasGeolocation
         var getInfoGeolocation = function getInfoGeolocation() {
@@ -97,7 +91,6 @@ angular.module('artmobilis').controller('aboutController',
         }
 
         $scope.$on('$ionicView.enter', function (e) {
-            getInfoUserMedia();
             getInfoGeolocation();
         });
 
