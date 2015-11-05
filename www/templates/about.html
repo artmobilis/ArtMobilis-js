@@ -1,0 +1,46 @@
+<ion-view view-title="A propos">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+    <ion-content class="padding">
+
+      <div class="item item-divider">A propos d'<span class="bold">Art Mobilis</span></div>
+      <div class="item item-text-wrap">
+        <ul class="contact-list">
+          <li>Art Mobilis : Un parcours urbain en réalité augmentée.</li>
+          <li><a href="https://sites.google.com/a/lehublot.net/artmobilis/">Présentation du projet Art Mobilis (Le Hublot, Nice)</a>.</li>
+          <li><a href="http://lehublot.net">Le Hublot</a> - <a href="http://www.openstreetmap.org/?mlat=43.7142&mlon=7.2890#map=13/43.7142/7.2890">16 rue de Roquebillière Nice</a></li>
+        </ul>
+      </div>
+
+      <div class="item item-divider">Informations techniques</span></div>
+      <div class="item item-text-wrap">
+        <dl>
+          <dt>Version</dt>
+            <dd>{{appVersion}}</dd>
+          <dt>Plateforme</dt>
+            <dd>{{infoPlatform}}</dd>
+          <dt>Navigateur</dt>
+            <dd><span ng-show="online">Le navigateur est en ligne.</span><span ng-hide="online">Le navigateur n'est pas en ligne.</span></dd>
+            <dd>{{infoBrowser}}</dd>
+          <dt>Ecran</dt>
+            <dd>{{infoSize}}</dd>
+          <dt>UserMedia</dt>
+            <dd>{{infoUsermedia}}</dd>
+          <dt>GPS</dt>
+            <dd>{{infoGps}}</dd>
+        </dl>
+      </div>
+
+      <div class="item item-divider">Développement</span></div>
+      <div class="item item-text-wrap">
+        <ul>
+          <li><a href="https://github.com/artmobilis/ArtMobilis/wiki" title="Wiki">Wiki</a>
+          <li><a href="https://github.com/artmobilis" title="Team GitHub">Team GitHub</a>
+          <li><a href="https://github.com/artmobilis/ArtMobilis" title="Dépôt principal">Dépôt principal</a></li>
+          <li><a href="https://github.com/artmobilis/ArtMobilis-js" title="Dépôt application javascript">Dépôt application javascript</a></li>
+        </ul>
+      </div>
+
+    </ion-content>
+</ion-view>

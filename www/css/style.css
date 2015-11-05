@@ -261,14 +261,6 @@ body {
     box-shadow: 0 3px 14px rgba(0,0,0,0.9);
 }
 
-.contact-list > li {
-    list-style: square inside;
-}
-
-.apropos-techinfo-list > li {
-    list-style: square inside;
-}
-
 .canevas {
     width: 100%;
     height: 100%;
@@ -289,4 +281,8 @@ centpourcent {
     text-align: center;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.bold {
+    font-weight: bold;
 }

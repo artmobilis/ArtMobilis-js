@@ -5,6 +5,8 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('artmobilis', ['ionic', 'leaflet-directive', 'ngCordova', 'igTruncate', 'webcam'])
 
+  .constant('APP_VERSION', '0.1.20151105')
+
 // whitelist for images
   .config(function ($compileProvider) {
       $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
@@ -76,21 +78,12 @@ angular.module('artmobilis', ['ionic', 'leaflet-directive', 'ngCordova', 'igTrun
           }
         }
       })
-      .state('app.apropos', {
-        url: "/apropos",
+      .state('app.about', {
+        url: "/about",
         views: {
           'menuContent' :{
-            templateUrl: "templates/apropos.html",
-            controller: 'AProposController'
-          }
-        }
-      })
-       .state('app.contact', {
-        url: "/contact",
-        views: {
-          'menuContent' :{
-            templateUrl: "templates/contact.html",
-            controller: 'ContactController'
+            templateUrl: "templates/about.html",
+            controller: 'aboutController'
           }
         }
       })

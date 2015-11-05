@@ -1,40 +1,28 @@
-angular.module('artmobilis').controller('AProposController',
+angular.module('artmobilis').controller('aboutController',
   ['$scope',
     '$location',
     '$cordovaGeolocation',
     '$stateParams',
-    'globals',
+    'APP_VERSION',
     function (
       $scope,
       $location,
       $cordovaGeolocation,
       $stateParams,
-      globals
+      APP_VERSION
       ) {
-        $scope.$on("$ionicView.loaded", function (e) {
-          // get the config
-          console.log(globals.config);
-          console.log(globals.journey);
-        });
 
-        $scope.$on("$ionicView.beforeLeave", function (e) {
+        // version
+        $scope.appVersion = APP_VERSION;
 
-        });
-        
+        // platform
+        $scope.infoPlatform = ionic.Platform.platform();
+
         // OnLine/Offline
-        {
-          if(navigator.onLine){ // always respond true under firefox41 + linux
-            $scope.infoOnline = "The browser is online.";
-            }
-            else {
-            $scope.infoOnline = "The browser is offline.";
-          }
-        }
+        $scope.online = navigator.onLine;// always respond true under firefox41 + linux
 
         // Browser Type
-        {
-          $scope.infoBrowser = navigator.userAgent;
-        }
+        $scope.infoBrowser = navigator.userAgent;
 
         // Browser size & Screen Res
         {
@@ -58,7 +46,7 @@ angular.module('artmobilis').controller('AProposController',
             bsh = document.body.clientHeight;
           }
           if (bsw != '' && bsh != ''){
-            $scope.infoSize = "Screen resolution :" + screenResolution + " , color depth :" + screenColorDepth + " , browser size :" + bsw + ' x ' + bsh + ".";
+            $scope.infoSize = "Résolution écran : " + screenResolution + " , profondeur de couleurs :" + screenColorDepth + " , taille du navigateur :" + bsw + ' x ' + bsh + ".";
           }
         }
 
@@ -70,53 +58,54 @@ angular.module('artmobilis').controller('AProposController',
              navigator.msGetUserMedia);
 
           if (window.hasUserMedia()) {
-              $scope.infoUsermedia = "getUserMedia supported by the browser.";
+              $scope.infoUsermedia = "getUserMedia est supporté par le navigateur.";
           } else {
-              $scope.infoUsermedia = "getUserMedia is not supported by the browser";
+              $scope.infoUsermedia = "getUserMedia n'est pas supporté par le navigateur.";
           }
         };
 
         // hasGeolocation
         var getInfoGeolocation = function getInfoGeolocation() {
           if (navigator.geolocation) {
-              $scope.infoGps = "Geolocation supported by the browser.";
+              $scope.infoGps = "La géolocalisation est supportée par le navigateur.";
               navigator.geolocation.getCurrentPosition(getGeolocPosition, getGeolocError);
           } else {
-              $scope.infoGps = "Geolocation is not supported by the browser.";
+              $scope.infoGps = "La géolocalisation n'est pas supportée par le navigateur.";
           }
         };
 
         function getGeolocPosition(position) {
-          $scope.infoGps += "Lat:" + position.coords.latitude +
-          "Long:" + position.coords.longitude;
+          $scope.infoGps += " Lat:" + position.coords.latitude +
+          " / Long:" + position.coords.longitude;
         }
 
         function getGeolocError(error) {
           switch(error.code) {
             case error.PERMISSION_DENIED:
-                $scope.infoGps += " User denied the request for Geolocation."
+                $scope.infoGps += " L'utilisateur a refusé la géolocalisation."
                 break;
             case error.POSITION_UNAVAILABLE:
-                $scope.infoGps += " Location information is unavailable."
+                $scope.infoGps += " Les informations de géolocalisation sont inaccessibles."
                 break;
             case error.TIMEOUT:
-                $scope.infoGps += " The request to get user location timed out."
+                $scope.infoGps += " La demande de géolocalisation a expirée."
                 break;
             case error.UNKNOWN_ERROR:
-                $scope.infoGps += " An unknown error occurred."
+                $scope.infoGps += " Erreur inatendue."
                 break;
           }
         }
 
-        // platform
-        var getInfoPlatform = function getInfoPlatform() {
-            $scope.infoPlatform = "Platform:" + ionic.Platform.platform();
-        };
-
         $scope.$on('$ionicView.enter', function (e) {
             getInfoUserMedia();
             getInfoGeolocation();
-            getInfoPlatform();
+        });
+
+        $scope.$on("$ionicView.loaded", function (e) {
+
+        });
+
+        $scope.$on("$ionicView.beforeLeave", function (e) {
 
         });
 
