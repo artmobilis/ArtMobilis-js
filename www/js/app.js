@@ -78,12 +78,12 @@ angular.module('artmobilis', ['ionic', 'leaflet-directive', 'ngCordova', 'igTrun
           }
         }
       })
-      .state('app.apropos', {
-        url: "/apropos",
+      .state('app.about', {
+        url: "/about",
         views: {
           'menuContent' :{
-            templateUrl: "templates/apropos.html",
-            controller: 'AProposController'
+            templateUrl: "templates/about.html",
+            controller: 'aboutController'
           }
         }
       })

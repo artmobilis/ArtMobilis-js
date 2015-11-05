@@ -1,4 +1,4 @@
-angular.module('artmobilis').controller('AProposController',
+angular.module('artmobilis').controller('aboutController',
   ['$scope',
     '$location',
     '$cordovaGeolocation',
