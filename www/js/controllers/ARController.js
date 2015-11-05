@@ -8,14 +8,18 @@ angular.module('artmobilis').controller('ARController',
     '$ionicModal',
     '$ionicPopup',
     'ARService',
+    'globals',
     function (
       $scope,
       $cordovaGeolocation,
       $stateParams,
       $ionicModal,
       $ionicPopup,
-      ARService
+      ARService,
+      globals
       ) {
+        console.log(globals.config);
+          console.log(globals.journey);
         $scope.isVideo = false;
         $scope.initialized = false;
         $scope.requestId = undefined;

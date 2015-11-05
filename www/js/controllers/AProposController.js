@@ -3,19 +3,24 @@ angular.module('artmobilis').controller('AProposController',
     '$location',
     '$cordovaGeolocation',
     '$stateParams',
+    'globals',
     function (
       $scope,
       $location,
       $cordovaGeolocation,
-      $stateParams
+      $stateParams,
+      globals
       ) {
         $scope.$on("$ionicView.loaded", function (e) {
-
+          // get the config
+          console.log(globals.config);
+          console.log(globals.journey);
         });
 
         $scope.$on("$ionicView.beforeLeave", function (e) {
 
         });
+        
         // OnLine/Offline
         {
           if(navigator.onLine){ // always respond true under firefox41 + linux

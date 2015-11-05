@@ -9,7 +9,7 @@ angular.module('artmobilis', ['ionic', 'leaflet-directive', 'ngCordova', 'igTrun
   .config(function ($compileProvider) {
       $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
   })
-  .run(function ($ionicPlatform) {
+  .run(function ($ionicPlatform, configFactory, journeyFactory, globals) {
     $ionicPlatform.ready(function() {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -21,6 +21,22 @@ angular.module('artmobilis', ['ionic', 'leaflet-directive', 'ngCordova', 'igTrun
       if(window.StatusBar) {
         StatusBar.styleDefault();
       }
+      // get config
+      configFactory.then(
+        function(data){
+          globals.config = data;
+        },
+        function(msg) {
+          console.log(msg);
+        });
+      // get journey
+      journeyFactory.then(
+        function(data){
+          globals.journey = data;
+        },
+        function(msg) {
+          console.log(msg);
+        });
     });
   }) 
 

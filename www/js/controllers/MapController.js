@@ -1,4 +1,4 @@
-//http://tombatossals.github.io/angular-leaflet-directive/examples/json/paths.json
+//old source : http://tombatossals.github.io/angular-leaflet-directive/examples/json/paths.json
 angular.module('artmobilis').controller('MapController',
   ['$scope',
     "$http",
@@ -7,6 +7,8 @@ angular.module('artmobilis').controller('MapController',
     '$stateParams',
     '$ionicModal',
     '$ionicPopup',
+    'InstructionsService',
+    'globals',
     function (
       $scope,
       $http,
@@ -15,57 +17,74 @@ angular.module('artmobilis').controller('MapController',
       $stateParams,
       $ionicModal,
       $ionicPopup,
-      InstructionsService
+      InstructionsService,
+      globals
       ) {
-        //
-        angular.extend($scope, {
-            center: {
-                lng: 7.2868098,
-                lat: 43.7141482,
-                zoom: 14
-            },
-            defaults: {
-                tileLayer: 'http://tile.stamen.com/watercolor/{z}/{x}/{y}.png',
-                maxZoom: 20,
-                zoomControlPosition: 'bottomleft'
-            },
-            parcours: {}
+        // set defaults
+        $scope.center = globals.config.map.center;
+        $scope.defaults = globals.config.map.defaults;
+        $scope.itinerary = {};
+        $scope.legend = globals.config.map.legend;
+
+        // markers icons
+        var local_icons = globals.config.map.icons;
+        $scope.icons = local_icons;
+
+        // init paths
+        globals.journey.properties.itinerary.paths = {};
+        globals.journey.properties.itinerary.paths.markers = {};
+        globals.journey.properties.itinerary.paths.markers.color = "#F00";
+        globals.journey.properties.itinerary.paths.markers.weight = 8;
+        globals.journey.properties.itinerary.paths.markers.latlngs = [];
+        globals.journey.properties.itinerary.paths.poi = {};
+        globals.journey.properties.itinerary.paths.poi.color = "#F0F";
+        globals.journey.properties.itinerary.paths.poi.weight = 8;
+        globals.journey.properties.itinerary.paths.poi.latlngs = [];
+
+        // markers
+        globals.journey.properties.itinerary.markers = [];
+
+        angular.forEach(globals.journey.marker, function(value, key) {
+          var marker = {};
+          marker.lat = value.geolocLat;
+          marker.lng = value.geolocLng;
+          marker.message = value.name;
+          marker.icon = local_icons.red_icon;
+          marker.focus = false;
+          marker.draggable = false;
+          globals.journey.properties.itinerary.markers.push(marker);
+          // get path
+          var latlng = {};
+          latlng.lat = value.geolocLat;
+          latlng.lng = value.geolocLng;
+          globals.journey.properties.itinerary.paths.markers.latlngs.push(latlng);
         });
+
+        // poi
+        angular.forEach(globals.journey.poi, function(value, key) {
+          var poi = {};
+          poi.lat = value.geolocLat;
+          poi.lng = value.geolocLng;
+          poi.message = value.name;
+          poi.icon = local_icons.purple_icon;
+          if (value.id == 0) {
+            poi.focus = true;
+          }
+          poi.draggable = false;
+          globals.journey.properties.itinerary.markers.push(poi);
+          // get path
+          var latlng = {};
+          latlng.lat = value.geolocLat;
+          latlng.lng = value.geolocLng;
+          globals.journey.properties.itinerary.paths.poi.latlngs.push(latlng);
+        });
+        $scope.markers = globals.journey.properties.itinerary.markers;
+        $scope.itinerary = globals.journey.properties.itinerary.paths;
+
         $scope.$on("$ionicView.loaded", function (e) {
-
             console.log("loaded");
-            $scope.loadPaths();
         });
-        $scope.loadPaths = function loadPaths() {
-            console.log("loadPaths");
-            $http.get("json/itineraire.json").success(function (data) {
-                console.log("loadPaths ok" + data);
-                $scope.parcours = data;
-                $scope.markers = data;
-                // modify marker data
-                for (var key in $scope.markers) {
-                    if ($scope.markers.hasOwnProperty(key)) {
-                        var obj = $scope.markers[key];
-                        for (var prop in obj) {
-                            // important check that this is objects own property 
-                            // not from prototype prop inherited
-                            if (obj.hasOwnProperty(prop)) {
-                                //console.log(prop + " = " + obj[prop]);
-                                if (prop === "icon") obj[prop] = eval(obj[prop]);
-                            }
-                        }
-                        obj.focus = true;
-                    }
-                }
-            });
-        };
 
-        // legende
-        $scope.legend = {
-            position: 'bottomleft',
-            colors: ['#F00'],
-            labels: ['Le hublot']
-        };
         /**
          * popupClick
          * @param destinationUrl
@@ -78,52 +97,7 @@ angular.module('artmobilis').controller('MapController',
                 $location.path(destinationUrl);
             }
         }
-        // icones markers
-        var local_icons = {
-            default_icon: {},
-            ici_icon: {
-                iconSize: [138, 95],
-                shadowSize: [50, 64],
-                iconAnchor: [22, 94],
-                shadowAnchor: [4, 62]
-            },
-            blue_icon: {
-                iconUrl: 'img/icones/marker-icon-blue.png',
-                shadowUrl: 'img/icones/markers_shadow.png',
-                iconAnchor: [11, 38]
-            },
-            orange_icon: {
-                iconUrl: 'img/icones/marker-icon-orange.png',
-                shadowUrl: 'img/icones/markers_shadow.png',
-                iconAnchor: [11, 38]
-            },
-            green_icon: {
-                iconUrl: 'img/icones/marker-icon-green.png',
-                shadowUrl: 'img/icones/markers_shadow.png',
-                iconAnchor: [11, 38]
-            },
-            grey_icon: {
-                iconUrl: 'img/icones/marker-icon-grey.png',
-                shadowUrl: 'img/icones/markers_shadow.png',
-                iconAnchor: [11, 38]
-            },
-            red_icon: {
-                iconUrl: 'img/icones/marker-icon-red.png',
-                shadowUrl: 'img/icones/markers_shadow.png',
-                iconAnchor: [11, 38]
-            },
-            purple_icon: {
-                iconUrl: 'img/icones/marker-icon-purple.png',
-                shadowUrl: 'img/icones/markers_shadow.png',
-                iconAnchor: [11, 38]
-            },
-            yellow_icon: {
-                iconUrl: 'img/icones/marker-icon-yellow.png',
-                shadowUrl: 'img/icones/markers_shadow.png',
-                iconAnchor: [11, 38]
-            }
-        };
-        $scope.icons = local_icons;
+
         /**
          * Center map on specific saved location
          * @param locationKey
@@ -131,6 +105,7 @@ angular.module('artmobilis').controller('MapController',
         $scope.goTo = function (locationKey) {
 
         };
+
         /**
          * show location
          * @param locationKey
@@ -139,7 +114,6 @@ angular.module('artmobilis').controller('MapController',
 
 
         };
-
 
         /**
          * Center map on user's current position
@@ -156,15 +130,15 @@ angular.module('artmobilis').controller('MapController',
                   $scope.markers.now = {
                       lat: position.coords.latitude,
                       lng: position.coords.longitude,
-                      message: "Vous êtes ici",
-                      icon: local_icons.ici_icon,
+                      message: "You are here",
+                      icon: local_icons.here_icon,
                       focus: true,
                       draggable: false
                   };
 
               }, function (err) {
                   // error
-                  console.log("Erreur de position!");
+                  console.log("Error getting position!");
                   console.log(err);
               });
 

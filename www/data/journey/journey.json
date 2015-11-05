@@ -1,0 +1,122 @@
+{
+  "properties": {
+    "name": "Ligne 16",
+    "description": "lorem ipsum",
+    "territory": {
+      "center": "43.714169, 7.289059",
+      "limits": "3000"
+    },
+    "itinerary": {
+      "duration": 14400,
+      "distance": 7000
+    },
+    "timeWindow": {
+      "type": "unlimited",
+      "start": 1451646000 ,
+      "end": 1464775200 
+    }
+  },
+  "poi": [
+    {
+      "id": 0,
+      "name": "Place Garibaldi",
+      "description": "lorem ipsum",
+      "icon": "data/common/icons/a.png",
+      "image": "data/journey/poi/0/place_garibaldi.image.png",
+      "geolocLat": 43.700983,
+      "geolocLng": 7.280346,
+      "httpLink": "https://fr.wikipedia.org/wiki/Place_Garibaldi"
+    },
+    {
+      "id": 1,
+      "name": "Place Saint Roch",
+      "description": "lorem ipsum",
+      "icon": "data/common/icons/a.png",
+      "image": "data/journey/poi/1/place_saint_roch.image.png",
+      "geolocLat": 43.712407,
+      "geolocLng": 7.292415,
+      "httpLink": "https://fr.wikipedia.org/wiki/%C3%89glise_Saint-Roch_de_Nice"
+    },
+    {
+      "id": 2,
+      "name": "Théatre Lino Ventura",
+      "description": "lorem ipsum",
+      "icon": "data/common/icons/a.png",
+      "image": "data/journey/poi/2/theatre_lino_ventura.image.png",
+      "geolocLat": 43.739029,
+      "geolocLng": 7.308018,
+      "httpLink": "http://www.tlv-nice.org/"
+    }
+  ],
+  "marker": [
+    {
+      "id": 0,
+      "name": "Statue place Garibaldi",
+      "type": "image",
+      "descriptor": "statue_place_garibaldi.desc.png",
+      "geoloc": true,
+      "geolocLat": 43.700983,
+      "geolocLng": 7.280346,
+      "geolocIcon": "data/common/icons/b.png",
+      "content": 0
+    },
+    {
+      "id": 1,
+      "name": "Clocher place Saint Roch",
+      "type": "image",
+      "descriptor": "clocher_place_saint_roch.desc.png",
+      "geoloc": true,
+      "geolocLat": 43.712439,
+      "geolocLng": 7.291768,
+      "geolocIcon": "data/common/icons/b.png",
+      "content": 1
+    },
+    {
+      "id": 2,
+      "name": "Distributeur de billets",
+      "type": "image",
+      "descriptor": "distributeur_place_saint_roch.desc.png",
+      "geoloc": true,
+      "geolocLat": 43.712216,
+      "geolocLng": 7.292149,
+      "geolocIcon": "data/common/icons/b.png",
+      "content": 2
+    },
+    {
+      "id": 3,
+      "name": "Facade theatre Lino Ventura",
+      "type": "image",
+      "descriptor": "facade_theatre_lino_ventura.desc.png",
+      "geoloc": true,
+      "geolocLat": 43.739053,
+      "geolocLng": 7.308052,
+      "geolocIcon": "data/common/icons/b.png",
+      "content": 3
+    }],
+    "content": [
+    {
+      "id": 0,
+      "type": "marked",
+      "animated": false,
+      "file": "data/journey/content/0/statue_place_garibaldi.content.gif"
+    },
+    {
+      "id": 1,
+      "type": "marked",
+      "animated": false,
+      "file": "data/journey/content/1/clocher_place_saint_roch.content.gif"
+    },
+    {
+      "id": 2,
+      "type": "marked",
+      "animated": false,
+      "file": "data/journey/content/2/istributeur_place_saint_roch.content.gif"
+    },
+    {
+      "id": 3,
+      "type": "marked",
+      "animated": false,
+      "file": "data/journey/content/3/facade_theatre_lino_ventura.content.gif"
+    }
+  ]
+}
