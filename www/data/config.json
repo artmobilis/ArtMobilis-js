@@ -1,9 +1,7 @@
 {
   "map": {
     "center": {
-      "lng": 7.2868098,
-      "lat": 43.7141482,
-      "zoom": 14
+      "zoom": 13
     },
     "defaults": {
       "tileLayer": "http://tile.stamen.com/watercolor/{z}/{x}/{y}.png",
@@ -18,10 +16,8 @@
     "icons": {
       "default_icon": {},
       "here_icon": {
-        "iconSize": [138, 95],
-        "shadowSize": [50, 64],
         "iconAnchor": [22, 94],
-        "shadowAnchor": [4, 62]
+        "iconUrl": "lib/leaflet/icons/monuments/bigben100.png"
       },
       "blue_icon": {
         "iconUrl": "lib/leaflet/icons/marker-icon-blue.png",

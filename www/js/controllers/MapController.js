@@ -48,7 +48,7 @@ angular.module('artmobilis').controller('MapController',
             'lat': value.geolocLat,
             'lng': value.geolocLng,
             'message': value.name,
-            'icon': local_icons.red_icon,
+            'icon': value.geolocIcon,
             'focus': false,
             'draggable': false
           };
@@ -68,7 +68,7 @@ angular.module('artmobilis').controller('MapController',
             'lat': value.geolocLat,
             'lng': value.geolocLng,
             'message': value.name,
-            'icon': local_icons.purple_icon,
+            'icon': value.geolocIcon,
             'focus': false,
             'draggable': false
           };
@@ -84,9 +84,16 @@ angular.module('artmobilis').controller('MapController',
           globals.journey.properties.itinerary.paths.poi.latlngs.push(latlng);
         });
 
+        // get center
+        var center = {
+          'lat': globals.journey.properties.territory.center.geolocLat,
+          'lng': globals.journey.properties.territory.center.geolocLng,
+          'zoom': globals.config.map.center.zoom
+        };
+
         // send values to the view
         angular.extend($scope, {
-          center:     globals.config.map.center,
+          center:     center,
           defaults:   globals.config.map.defaults,
           legend:     globals.config.map.legend,
           icons:      local_icons,
