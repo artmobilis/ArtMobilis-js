@@ -3,7 +3,10 @@
     "name": "Ligne 16",
     "description": "lorem ipsum",
     "territory": {
-      "center": "43.714169, 7.289059",
+      "center": {
+        "geolocLat": 43.79,
+        "geolocLng": 7.28
+      },
       "limits": "3000"
     },
     "itinerary": {
@@ -21,30 +24,51 @@
       "id": 0,
       "name": "Place Garibaldi",
       "description": "lorem ipsum",
-      "icon": "data/common/icons/a.png",
       "image": "data/journey/poi/0/place_garibaldi.image.png",
       "geolocLat": 43.700983,
       "geolocLng": 7.280346,
+      "geolocIcon": {
+        "iconUrl": "lib/leaflet/icons/leaf/leaf-green.png",
+        "iconSize": [38, 95],
+        "iconAnchor": [20, 90],
+        "shadowSize": [50, 64],
+        "shadowUrl": "lib/leaflet/icons/leaf/leaf-shadow.png",
+        "shadowAnchor": [4, 62]
+      },
       "httpLink": "https://fr.wikipedia.org/wiki/Place_Garibaldi"
     },
     {
       "id": 1,
       "name": "Place Saint Roch",
       "description": "lorem ipsum",
-      "icon": "data/common/icons/a.png",
       "image": "data/journey/poi/1/place_saint_roch.image.png",
       "geolocLat": 43.712407,
       "geolocLng": 7.292415,
+      "geolocIcon": {
+        "iconUrl": "lib/leaflet/icons/leaf/leaf-green.png",
+        "iconSize": [38, 95],
+        "iconAnchor": [20, 90],
+        "shadowSize": [50, 64],
+        "shadowUrl": "lib/leaflet/icons/leaf/leaf-shadow.png",
+        "shadowAnchor": [4, 62]
+      },
       "httpLink": "https://fr.wikipedia.org/wiki/%C3%89glise_Saint-Roch_de_Nice"
     },
     {
       "id": 2,
       "name": "Théatre Lino Ventura",
       "description": "lorem ipsum",
-      "icon": "data/common/icons/a.png",
       "image": "data/journey/poi/2/theatre_lino_ventura.image.png",
       "geolocLat": 43.739029,
       "geolocLng": 7.308018,
+      "geolocIcon": {
+        "iconUrl": "lib/leaflet/icons/leaf/leaf-green.png",
+        "iconSize": [38, 95],
+        "iconAnchor": [20, 90],
+        "shadowSize": [50, 64],
+        "shadowUrl": "lib/leaflet/icons/leaf/leaf-shadow.png",
+        "shadowAnchor": [4, 62]
+      },
       "httpLink": "http://www.tlv-nice.org/"
     }
   ],
@@ -57,8 +81,15 @@
       "geoloc": true,
       "geolocLat": 43.700983,
       "geolocLng": 7.280346,
-      "geolocIcon": "data/common/icons/b.png",
-      "content": 0
+      "geolocIcon": {
+        "iconUrl": "lib/leaflet/icons/leaf/leaf-green.png",
+        "iconSize": [38, 95],
+        "iconAnchor": [20, 90],
+        "shadowSize": [50, 64],
+        "shadowUrl": "lib/leaflet/icons/leaf/leaf-shadow.png",
+        "shadowAnchor": [4, 62]
+      },
+      "contentId": 0
     },
     {
       "id": 1,
@@ -68,8 +99,15 @@
       "geoloc": true,
       "geolocLat": 43.712439,
       "geolocLng": 7.291768,
-      "geolocIcon": "data/common/icons/b.png",
-      "content": 1
+      "geolocIcon": {
+        "iconUrl": "lib/leaflet/icons/leaf/leaf-green.png",
+        "iconSize": [38, 95],
+        "iconAnchor": [20, 90],
+        "shadowSize": [50, 64],
+        "shadowUrl": "lib/leaflet/icons/leaf/leaf-shadow.png",
+        "shadowAnchor": [4, 62]
+      },
+      "contentId": 1
     },
     {
       "id": 2,
@@ -79,8 +117,15 @@
       "geoloc": true,
       "geolocLat": 43.712216,
       "geolocLng": 7.292149,
-      "geolocIcon": "data/common/icons/b.png",
-      "content": 2
+      "geolocIcon": {
+        "iconUrl": "lib/leaflet/icons/leaf/leaf-green.png",
+        "iconSize": [38, 95],
+        "iconAnchor": [20, 90],
+        "shadowSize": [50, 64],
+        "shadowUrl": "lib/leaflet/icons/leaf/leaf-shadow.png",
+        "shadowAnchor": [4, 62]
+      },
+      "contentId": 2
     },
     {
       "id": 3,
@@ -90,8 +135,15 @@
       "geoloc": true,
       "geolocLat": 43.739053,
       "geolocLng": 7.308052,
-      "geolocIcon": "data/common/icons/b.png",
-      "content": 3
+      "geolocIcon": {
+        "iconUrl": "lib/leaflet/icons/leaf/leaf-green.png",
+        "iconSize": [38, 95],
+        "iconAnchor": [20, 90],
+        "shadowSize": [50, 64],
+        "shadowUrl": "lib/leaflet/icons/leaf/leaf-shadow.png",
+        "shadowAnchor": [4, 62]
+      },
+      "contentId": 3
     }],
     "content": [
     {
