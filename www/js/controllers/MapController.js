@@ -20,67 +20,83 @@ angular.module('artmobilis').controller('MapController',
       InstructionsService,
       globals
       ) {
-        // set defaults
-        $scope.center = globals.config.map.center;
-        $scope.defaults = globals.config.map.defaults;
-        $scope.itinerary = {};
-        $scope.legend = globals.config.map.legend;
 
-        // markers icons
+        // init icons
         var local_icons = globals.config.map.icons;
-        $scope.icons = local_icons;
 
         // init paths
-        globals.journey.properties.itinerary.paths = {};
-        globals.journey.properties.itinerary.paths.markers = {};
-        globals.journey.properties.itinerary.paths.markers.color = "#F00";
-        globals.journey.properties.itinerary.paths.markers.weight = 8;
-        globals.journey.properties.itinerary.paths.markers.latlngs = [];
-        globals.journey.properties.itinerary.paths.poi = {};
-        globals.journey.properties.itinerary.paths.poi.color = "#F0F";
-        globals.journey.properties.itinerary.paths.poi.weight = 8;
-        globals.journey.properties.itinerary.paths.poi.latlngs = [];
+        globals.journey.properties.itinerary.paths = {
+          'markers': {
+            'color': '#F00',
+            'weight': 8,
+            'latlngs': []
+          },
+          'poi': {
+            'color': '#F0F',
+            'weight': 8,
+            'latlngs': []
+          }
+        };
 
-        // markers
+        // init markers
         globals.journey.properties.itinerary.markers = [];
 
+        // get markers
         angular.forEach(globals.journey.marker, function(value, key) {
-          var marker = {};
-          marker.lat = value.geolocLat;
-          marker.lng = value.geolocLng;
-          marker.message = value.name;
-          marker.icon = local_icons.red_icon;
-          marker.focus = false;
-          marker.draggable = false;
+          // get marker
+          var marker = {
+            'lat': value.geolocLat,
+            'lng': value.geolocLng,
+            'message': value.name,
+            'icon': local_icons.red_icon,
+            'focus': false,
+            'draggable': false
+          };
           globals.journey.properties.itinerary.markers.push(marker);
           // get path
-          var latlng = {};
-          latlng.lat = value.geolocLat;
-          latlng.lng = value.geolocLng;
+          var latlng = {
+            'lat': value.geolocLat,
+            'lng': value.geolocLng
+          };
           globals.journey.properties.itinerary.paths.markers.latlngs.push(latlng);
         });
 
-        // poi
+        // get pois
         angular.forEach(globals.journey.poi, function(value, key) {
-          var poi = {};
-          poi.lat = value.geolocLat;
-          poi.lng = value.geolocLng;
-          poi.message = value.name;
-          poi.icon = local_icons.purple_icon;
+          // get poi
+          var poi = {
+            'lat': value.geolocLat,
+            'lng': value.geolocLng,
+            'message': value.name,
+            'icon': local_icons.purple_icon,
+            'focus': false,
+            'draggable': false
+          };
           if (value.id == 0) {
             poi.focus = true;
           }
-          poi.draggable = false;
           globals.journey.properties.itinerary.markers.push(poi);
           // get path
-          var latlng = {};
-          latlng.lat = value.geolocLat;
-          latlng.lng = value.geolocLng;
+          var latlng = {
+            'lat': value.geolocLat,
+            'lng': value.geolocLng
+          };
           globals.journey.properties.itinerary.paths.poi.latlngs.push(latlng);
         });
-        $scope.markers = globals.journey.properties.itinerary.markers;
-        $scope.itinerary = globals.journey.properties.itinerary.paths;
 
+        // send values to the view
+        angular.extend($scope, {
+          center:     globals.config.map.center,
+          defaults:   globals.config.map.defaults,
+          legend:     globals.config.map.legend,
+          icons:      local_icons,
+          markers:    globals.journey.properties.itinerary.markers,
+          itinerary:  globals.journey.properties.itinerary.paths
+        });
+
+        /**
+         * Ionic on
+         */
         $scope.$on("$ionicView.loaded", function (e) {
 
         });
@@ -119,29 +135,26 @@ angular.module('artmobilis').controller('MapController',
          * Center map on user's current position
          */
         $scope.locate = function () {
-
-            $cordovaGeolocation
-              .getCurrentPosition()
-              .then(function (position) {
-                  $scope.center.lat = position.coords.latitude;
-                  $scope.center.lng = position.coords.longitude;
-                  $scope.center.zoom = 12;
-
-                  $scope.markers.now = {
-                      lat: position.coords.latitude,
-                      lng: position.coords.longitude,
-                      message: "Vous êtes ici",
-                      icon: local_icons.here_icon,
-                      focus: true,
-                      draggable: false
-                  };
-
-              }, function (err) {
-                  // error
-                  console.log("Error getting position!");
-                  console.log(err);
-              });
-
+          $cordovaGeolocation
+            .getCurrentPosition()
+            .then(function (position) {
+              $scope.center.lat = position.coords.latitude;
+              $scope.center.lng = position.coords.longitude;
+              $scope.center.zoom = 16;
+              var now = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+                message: "Vous êtes ici",
+                icon: local_icons.here_icon,
+                focus: true,
+                draggable: false
+              };
+              $scope.markers.push(now);
+            }, function (err) {
+              // error
+              console.log("Error getting position!");
+              console.log(err);
+            });
         };
 
     }]);
