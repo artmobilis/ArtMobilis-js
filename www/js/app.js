@@ -114,4 +114,9 @@ angular.module('artmobilis', ['ionic', 'leaflet-directive', 'ngCordova', 'igTrun
       })
 
     $urlRouterProvider.otherwise("/app/carte");
-  });
+  })
+  .config(['$logProvider',
+    function($logProvider) {
+        $logProvider.debugEnabled(false);
+    }
+]);
