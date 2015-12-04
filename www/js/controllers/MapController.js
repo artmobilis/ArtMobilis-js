@@ -21,6 +21,27 @@ angular.module('artmobilis').controller('MapController',
       globals
       ) {
 
+        var tilesDict = {
+            openstreetmap: {
+                url: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                options: {
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }
+            },
+            opencyclemap: {
+                url: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
+                options: {
+                    attribution: 'All maps &copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, map data &copy; <a href="http://www.openstreetmap.org">OpenStreetMap</a> (<a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+                }
+            },
+            starcluster: {
+                url: "eso/{z}/{x}/{y}.png",
+                options: {
+                    attribution: 'ESO/INAF-VST/OmegaCAM'
+                 }
+             }
+        };
+
         // init icons
         var local_icons = globals.config.map.icons;
 
@@ -97,9 +118,16 @@ angular.module('artmobilis').controller('MapController',
           defaults:   globals.config.map.defaults,
           legend:     globals.config.map.legend,
           icons:      local_icons,
+          tiles:      tilesDict.opencyclemap,
           markers:    globals.journey.properties.itinerary.markers,
           itinerary:  globals.journey.properties.itinerary.paths
         });
+        
+    
+    $scope.changeTiles = function(tiles) {
+       console.log("change tiles "+tiles);
+        $scope.tiles = tilesDict[tiles];
+    };
 
         /**
          * Ionic on

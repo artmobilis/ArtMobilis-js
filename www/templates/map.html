@@ -10,7 +10,11 @@
 
   <ion-content data-tap-disabled="true">
 
-    <leaflet legend="legend" defaults="defaults" height="90%" markers="markers" paths="itinerary" center="center"></leaflet>
+    <button ng-click="changeTiles('opencyclemap');" class="btn btn-default">OpenCycleMaps</button>
+    <button ng-click="changeTiles('openstreetmap');" class="btn btn-default">OpenStreetMaps</button>
+    <button ng-click="changeTiles('starcluster');" class="btn btn-default">StarCluster</button>
+
+    <leaflet legend="legend" tiles="tiles" defaults="defaults" height="90%" markers="markers" paths="itinerary" center="center"></leaflet>
 
   </ion-content>
 
