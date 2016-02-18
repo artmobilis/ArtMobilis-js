@@ -1,0 +1,154 @@
+{
+  "constants": {
+    "asset_path": "./assets",
+    "image_path": "images",
+    "video_path": "videos",
+    "model_path": "models"
+  },
+  "object": {
+    "type": "Object3D",
+    "uuid": "root",
+    "children": [
+      {
+        "type": "Mesh",
+        "uuid": "mesh_cube",
+        "geometry": "geo_box",
+        "material": "mat_phong_red"
+      },
+      {
+        "type": "Mesh",
+        "uuid": "mesh_sphere",
+        "geometry": "geo_sphere",
+        "material": "mat_phong_blue"
+      },
+      {
+        "type": "Mesh",
+        "uuid": "mesh_plane",
+        "geometry": "geo_plane",
+        "material": "mat_phong_yellow"
+      },
+      {
+        "type": "Mesh",
+        "uuid": "mesh_lehublot",
+        "geometry": "geo_plane",
+        "material": "mat_lehublot"
+      },
+      {
+        "type": "Mesh",
+        "uuid": "mesh_frozen",
+        "geometry": "geo_plane",
+        "material": "mat_frozen"
+      },
+      {
+        "type": "Mesh",
+        "uuid": "mesh_banana",
+        "geometry": "geo_plane",
+        "material": "mat_banana"
+      },
+      {
+        "type": "Mesh",
+        "uuid": "mesh_landmark",
+        "geometry": "geo_box",
+        "material": "mat_phong_red",
+        "scale": [
+          5,
+          20,
+          5
+        ]
+      }
+    ]
+  },
+  "geometries": [
+    {
+      "type": "BoxGeometry",
+      "uuid": "geo_box",
+      "width": 1,
+      "height": 1,
+      "depth": 1
+    },
+    {
+      "type": "PlaneGeometry",
+      "uuid": "geo_plane",
+      "width": 1,
+      "height": 1
+    },
+    {
+      "type": "SphereGeometry",
+      "uuid": "geo_sphere",
+      "radius": 1,
+      "widthSegments": 20,
+      "heightSegments": 11
+    }
+  ],
+  "materials": [
+    {
+      "type": "MeshPhongMaterial",
+      "uuid": "mat_phong_blue",
+      "color": "0x0D6CFA"
+    },
+    {
+      "type": "MeshPhongMaterial",
+      "uuid": "mat_phong_red",
+      "color": "0x7F2109"
+    },
+    {
+      "type": "MeshPhongMaterial",
+      "uuid": "mat_phong_yellow",
+      "color": "0xECC116"
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "uuid": "mat_lehublot",
+      "map": "text_lehublot",
+      "transparent": false,
+      "side": 2
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "uuid": "mat_frozen",
+      "map": "text_frozen",
+      "side": 2
+    },
+    {
+      "type": "MeshBasicMaterial",
+      "uuid": "mat_banana",
+      "map": "text_banana",
+      "side": 2
+    }
+  ],
+  "textures": [
+    {
+      "uuid": "text_lehublot",
+      "image": "img_lehublot",
+      "animated": false
+    },
+    {
+      "uuid": "text_frozen",
+      "video": "vid_frozen",
+      "loop": true
+    },
+    {
+      "uuid": "text_banana",
+      "image": "img_banana",
+      "animated": true
+    }
+  ],
+  "images": [
+    {
+      "uuid": "img_lehublot",
+      "url": "lehublot.jpg"
+    },
+    {
+      "uuid": "img_banana",
+      "url": "banana.gif"
+    }
+  ],
+  "videos": [
+    {
+      "uuid": "vid_frozen",
+      "url": "frozen480p.mp4",
+      "width": "480",
+      "height": "854"
+    }
+  ]
+}

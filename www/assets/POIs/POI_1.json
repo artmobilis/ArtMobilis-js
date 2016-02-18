@@ -1,0 +1,20 @@
+{
+  "uuid": "poi_1",
+  "name": "Le Hublot",
+  "latitude": 43.714253,
+  "longitude": 7.2890073,
+  "radius": 2000,
+  "landmark": {
+    "object": "mesh_landmark",
+    "height": 20,
+    "scale": 10
+  },
+  "channels": [
+    {
+      "uuid": "channel_tag"
+    },
+    {
+      "uuid": "channel_image"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "constants": {
+    "asset_path": "./assets",
+    "image_path": "images",
+    "video_path": "videos",
+    "model_path": "models"
+  },
+  "object": {
+    "type": "Scene",
+    "uuid": "scene",
+    "children": [
+      {
+        "type": "Mesh",
+        "uuid": "landmark_1",
+        "name": "Rond point",
+        "geometry": "geo_box",
+        "material": "mat_phong_red",
+        "userData": {
+          "latitude": 43.715440,
+          "longitude": 7.289407,
+          "altitude": 40
+        }
+      },
+      {
+        "type": "Mesh",
+        "uuid": "landmark_3",
+        "name": "Vauban",
+        "geometry": "geo_box",
+        "material": "mat_phong_yellow",
+        "userData": {
+          "latitude": 43.711430,
+          "longitude": 7.288169,
+          "altitude": 40
+        }
+      },
+      {
+        "type": "Mesh",
+        "uuid": "landmark_2_",
+        "name": "Boulevard Virgile Barel",
+        "geometry": "geo_box",
+        "material": "mat_phong_blue",
+        "userData": {
+          "latitude": 43.714207,
+          "longitude": 7.292696,
+          "altitude": 40
+        }
+      }
+    ]
+  },
+  "geometries": [
+    {
+      "type": "BoxGeometry",
+      "uuid": "geo_box",
+      "width": 10,
+      "height": 50,
+      "depth": 10
+    }
+  ],
+  "materials": [
+    {
+      "type": "MeshPhongMaterial",
+      "uuid": "mat_phong_blue",
+      "color": "0x0D6CFA"
+    },
+    {
+      "type": "MeshPhongMaterial",
+      "uuid": "mat_phong_red",
+      "color": "0x7F2109"
+    },
+    {
+      "type": "MeshPhongMaterial",
+      "uuid": "mat_phong_yellow",
+      "color": "0xECC116"
+    }
+  ],
+  "textures": [],
+  "images": [],
+  "videos": []
+}
