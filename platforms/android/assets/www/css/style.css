@@ -1,3 +1,6 @@
+body {
+}
+
 progress {
   display: inline-block;
   -moz-box-sizing: border-box;
@@ -11,7 +14,7 @@ progress {
   background:         linear-gradient(#2d2d2d,#444);
   border: 1px solid rgba(0,0,0,.5);
   border-radius: 15px;
-  box-shadow: 0 1px 0 rgba(255,255,255,.2);   
+  box-shadow: 0 1px 0 rgba(255,255,255,.2);
 }
 
 progress::-moz-progress-bar {
@@ -46,7 +49,7 @@ progress::-moz-progress-bar {
   background-size: 300px 20px, auto, auto;
   background-position: -300px 0, top, top;
   background-position: top right, top, top;
-  box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 
+  box-shadow: 0 1px 0 rgba(255,255,255,.5) inset,
   0 -1px 0 rgba(0,0,0,.8) inset,
   0 0 2px black;
   
@@ -85,7 +88,7 @@ progress::-webkit-progress-value {
   background-size: 300px 20px, auto, auto;
   background-position: -300px 0, top, top;
   background-position: top right, top, top;
-  box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 
+  box-shadow: 0 1px 0 rgba(255,255,255,.5) inset,
   0 -1px 0 rgba(0,0,0,.8) inset,
   0 0 2px black;
 }
@@ -93,13 +96,70 @@ progress::-webkit-progress-bar {
   background: transparent;
 }
 
-.round {
+
+.background_map {
+  background-color: white;
+  background-image: url(../img/background_map.jpg);
+  background-position: center center;
+  background-size: auto 100%;
+}
+
+
+#play_button_container {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  display: block;
+  left: 50%;
+  bottom: 50px;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
   overflow: hidden;
-  border: 12px solid rgba(64, 154, 218, .4);
+  border: 8px solid rgba(64, 154, 218, .25);
 }
-.round img {
-  display: block;
-  min-width: 100%;
-  min-height: 100%;
+.play_button {
+  position: absolute;
+}
+img.play_button {
+  -webkit-filter: blur(1px);
+}
+#button_triangle_right {
+  width: 60px;
+  height: 60px;
+  border-top: 40px solid transparent;
+  border-left: 60px solid white;
+  border-bottom: 40px solid transparent;
+  z-index:2;
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  transform: translate(-20px, 40px);
+  box-shadow: -5px 0px 4px -4px black;
+}
+
+#info_bar {
+  background-color: #0885B4;
+  box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.2) inset;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 50px;
+}
+
+#preface_bloc {
+  background-color: white;
+  box-shadow: 0px 0px 50px 20px rgba(0, 0, 0, 0.2) inset;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 150px;
+}
+
+#main_menu_bloc {
+  position: absolute;
+  bottom: 0px;
+  height: 200px;
+  width: 100%;
 }

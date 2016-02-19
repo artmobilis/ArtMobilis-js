@@ -54,6 +54,7 @@ angular.module('starter')
             document.body.removeChild(_canvas);
             _canvas_appended = false;
           }
+          _device_lock_screen.Unlock();
         });
 
 
