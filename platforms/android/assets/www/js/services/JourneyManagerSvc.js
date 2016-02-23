@@ -121,6 +121,13 @@ angular.module('starter')
     return undefined;
   };
 
+  this.GetPOIs = function() {
+    if (_journey)
+      return _journey.GetPOIs();
+    else
+      return undefined;
+  }
+
   this.Start = function() {
     if (!_running) {
       _running = true;

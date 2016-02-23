@@ -15,16 +15,20 @@ angular.module('starter')
   var _loading_manager = new LoadingManager();
   var _starting_manager = new LoadingManager();
 
-  var _canvas = document.createElement('canvas');
+  var _canvas3d = document.createElement('canvas');
   var _scene = new Scene( {
     gps_converter: function(latitude, longitude) {
       return CoordinatesConverterSvc.ConvertLocalCoordinates(latitude, longitude);
     },
-    canvas: _canvas,
+    canvas: _canvas3d,
     fov: (ionic.Platform.isWebView()) ? 80 : 40
   } );
   _scene.SetFullWindow();
   _scene.AddObject(new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 ));
+
+  var _canvas2d = document.createElement('canvas');
+  _canvas2d.style = "position: absolute; left:0px; right:0px; background-color: transparent;";
+  var _context2d = _canvas2d.getContext('2d');
 
   var _orientation_control = new DeviceOrientationControl(_scene.GetCamera());
 
@@ -35,8 +39,15 @@ angular.module('starter')
   _poi_limit_obj.position.y = -3;
   _poi_limit_obj.rotation.x = 1.5708;
 
-  var _landmarks;
+  var _poi_landmarks;
 
+  var _channels_landmarks;
+
+
+  function OnWindowResize() {
+    _canvas2d.width = window.innerWidth;
+    _canvas2d.height = window.innerHeight;
+  }
 
   function AddPOIMarkers() {
     var poi = JourneyManagerSvc.GetCurrentPOI();
@@ -92,10 +103,15 @@ angular.module('starter')
     _poi_limit_obj.position.x = poi.position.x;
     _poi_limit_obj.position.z = poi.position.y;
     _scene.AddObject(_poi_limit_obj);
+
+    _channels_landmarks = JourneyManagerSvc.GetPOIChannelsLandmarks();
+    _scene.AddObject(_channels_landmarks);
   }
 
   function OnExitPOI() {
     _scene.RemoveObject(_poi_limit_obj);
+    _scene.RemoveObject(_channels_landmarks);
+    _channels_landmarks = undefined;
 
     MarkerDetectorSvc.ClearMarkers();
     _tracked_obj_manager.Clear();
@@ -158,7 +174,7 @@ angular.module('starter')
 
         JourneyManagerSvc.SetJourney(_journey);
 
-        AddLandmarks();
+        AddPOILandmarks();
 
         LoadingSvc.End();
         _loading_manager.End();
@@ -181,13 +197,13 @@ angular.module('starter')
     });
   }
 
-  function AddLandmarks() {
+  function AddPOILandmarks() {
     LoadingSvc.Start();
     _loading_manager.Start();
 
     DataManagerSvc.OnLoad(function() {
-      _landmarks = JourneyManagerSvc.GetLandmarks();
-      _scene.AddObject(_landmarks);
+      _poi_landmarks = JourneyManagerSvc.GetPOILandmarks();
+      _scene.AddObject(_poi_landmarks);
       _loading_manager.End();
       LoadingSvc.End();
     });
@@ -239,6 +255,9 @@ angular.module('starter')
       document.addEventListener('device_move_xy', OnDeviceMove, false);
       _orientation_control.Connect();
 
+      window.addEventListener('resize', OnWindowResize, false);
+      OnWindowResize();
+
       _running = true;
 
       LoadingSvc.End();
@@ -255,8 +274,10 @@ angular.module('starter')
       return;
     
     _starting_manager.OnEnd(function() {
+      _scene.StopFullWindow();
       document.removeEventListener('journey_mode_change', OnJourneyModeChange, false);
       document.removeEventListener('device_move_xy', OnDeviceMove, false);
+      window.removeEventListener('resize', OnWindowResize, false);
       _orientation_control.Disconnect();
       _running = false;
       MarkerDetectorSvc.Stop();
@@ -265,8 +286,12 @@ angular.module('starter')
   };
 
   this.GetCanvas = function() {
-    return _canvas;
+    return _canvas2d;
   };
+
+  function OnCanvas(x, y, canvas) {
+    return (0 <= x && x < canvas.width && 0 <= y && y < canvas.height);
+  }
 
   function UpdateTracking() {
     MarkerDetectorSvc.Update();
@@ -299,7 +324,47 @@ angular.module('starter')
     }
 
     _tracked_obj_manager.Update();
-  };
+  }
+
+  function UpdateBubbles() {
+    var pois = JourneyManagerSvc.GetPOIs();
+
+    var poi_position = new THREE.Vector3();
+
+    var cam_pos = new THREE.Vector3();
+
+    cam_pos.setFromMatrixPosition(_scene.GetCamera().matrixWorld);
+
+    _context2d.fillStyle = "rgba(15, 15, 15, 0.75)";
+
+    for (poi of pois) {
+      poi_position.x = poi.position.x;
+      poi_position.z = poi.position.y;
+      var position = THREEx.WorldToCanvasPosition(poi_position, _scene.GetCamera(), _canvas2d);
+
+      if (position.z < 1) {
+        var x = position.x;
+        var y = _canvas2d.height - 100;
+        var width = 120;
+        var height = 58;
+        DrawBubble(_context2d, x, y, width, height, 10);
+
+        var distance = (cam_pos.distanceTo(poi_position) / 1000).toFixed(1);
+        var padding = 6;
+        var size_max = width - 2 * padding;
+        var line = 0;
+        var font_size = 17;
+
+        _context2d.font = font_size + 'px sans-serif';
+        _context2d.fillStyle = 'white';
+        line = y - height / 2 + font_size + padding;
+        _context2d.fillText(poi.name, x - width / 2 + padding, line, size_max);
+        line += font_size + padding;
+        _context2d.fillText(distance + ' km', x - width / 2 + padding, line, size_max);
+
+      }
+    }
+  }
 
   this.Update = function() {
 
@@ -312,8 +377,50 @@ angular.module('starter')
 
     _scene.Render();
 
+
+
+    _context2d.clearRect(0, 0, _canvas2d.width, _canvas2d.height);
+    _context2d.drawImage(_canvas3d, 0, 0);
+
+    UpdateBubbles();
+
     MarkerDetectorSvc.Empty();
   };
 
 
 })
+
+THREEx.WorldToCanvasPosition = function() {
+  var vec = new THREE.Vector3();
+
+  return function(position, camera, canvas) {
+    vec.copy(position);
+    vec.project(camera);
+
+    var x = Math.round( (vec.x + 1) * canvas.width / 2 );
+    var y = Math.round( (-vec.y + 1) * canvas.height / 2 );
+
+    return { x: x, y: y, z: vec.z };
+  };
+}();
+
+DrawBubble = function(ctx, x, y, width, height, radius) {
+  var x_min = x - (width / 2);
+  var x_max = x_min + width;
+  var y_min = y - (height / 2);
+  var y_max = y_min + height;
+
+  ctx.beginPath();
+
+  ctx.moveTo(x_min, y_min + radius);
+  ctx.lineTo(x_min, y_max - radius);
+  ctx.quadraticCurveTo(x_min, y_max, x_min + radius, y_max);
+  ctx.lineTo(x_max - radius, y_max);
+  ctx.quadraticCurveTo(x_max, y_max, x_max, y_max - radius);
+  ctx.lineTo(x_max, y_min + radius);
+  ctx.quadraticCurveTo(x_max, y_min, x_max - radius, y_min);
+  ctx.lineTo(x_min + radius, y_min);
+  ctx.quadraticCurveTo(x_min, y_min, x_min, y_min + radius);
+
+  ctx.fill();
+};

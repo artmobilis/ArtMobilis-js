@@ -4,17 +4,22 @@
   "latitude": 43.714253,
   "longitude": 7.2890073,
   "radius": 2000,
-  "landmark": {
-    "object": "mesh_landmark",
-    "height": 20,
-    "scale": 10
-  },
   "channels": [
     {
-      "uuid": "channel_tag"
+      "uuid": "channel_tag",
+      "object": "mesh_landmark",
+      "longitude": 43.714438,
+      "latitude": 7.289294,
+      "altitude": 10,
+      "scale": 10
     },
     {
-      "uuid": "channel_image"
+      "uuid": "channel_image",
+      "object": "mesh_landmark",
+      "longitude": 43.714600,
+      "latitude": 7.288657,
+      "altitude": 10,
+      "scale": 10
     }
   ]
 }

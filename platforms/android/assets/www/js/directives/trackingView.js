@@ -34,7 +34,7 @@ angular.module('starter')
 
         _device_lock_screen.LockPortrait();
 
-        _canvas = JourneySceneSvc.GetCanvas();
+
         document.body.appendChild(_canvas);
         _canvas_appended = true;
 

@@ -10,7 +10,6 @@
     "uuid": "scene",
     "children": [
       {
-        "type": "Mesh",
         "uuid": "landmark_1",
         "name": "Rond point",
         "geometry": "geo_box",
@@ -22,7 +21,6 @@
         }
       },
       {
-        "type": "Mesh",
         "uuid": "landmark_3",
         "name": "Vauban",
         "geometry": "geo_box",
@@ -34,7 +32,6 @@
         }
       },
       {
-        "type": "Mesh",
         "uuid": "landmark_2_",
         "name": "Boulevard Virgile Barel",
         "geometry": "geo_box",

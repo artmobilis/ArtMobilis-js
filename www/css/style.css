@@ -107,8 +107,8 @@ progress::-webkit-progress-bar {
 
 #play_button_container {
   position: absolute;
-  width: 150px;
-  height: 150px;
+  width: 175px;
+  height: 175px;
   display: block;
   left: 50%;
   bottom: 50px;
