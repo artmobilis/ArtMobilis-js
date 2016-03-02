@@ -19,7 +19,7 @@ angular.module('starter')
 
   var _on_added_callbacks = {};
 
-  this.video_scale_down = 2;
+  this.video_scale_down = 1;
 
   this.position = new THREE.Vector3();
   this.rotation = new THREE.Euler();
@@ -170,6 +170,20 @@ angular.module('starter')
   this.ClearMarkers = function() {
     if (_worker) {
       _worker.postMessage( { cmd: 'clear' } );
+    }
+  };
+
+  this.ActiveMarker = function(uuid, bool) {
+    if (_worker) {
+      var cmd = (bool) ? 'active' : 'desactive';
+      _worker.postMessage( { cmd: cmd, uuid: uuid } );
+    }
+  };
+
+  this.ActiveAllMarkers = function(bool) {
+    if (_worker) {
+      var cmd = (bool) ? 'active_all' : 'desactive_all';
+      _worker.postMessage( { cmd: cmd } );
     }
   };
 

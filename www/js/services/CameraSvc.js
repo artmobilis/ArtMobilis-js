@@ -2,7 +2,7 @@ angular.module('starter')
 
 .service('CameraSvc', function() {
 
-  var camera_grabbing = new FrontCamGrabbing();
+  var camera_grabbing = new AM.FrontCamGrabbing();
 
   this.Start = function(on_loading_end, on_error) {
     camera_grabbing.Start(on_loading_end, on_error);

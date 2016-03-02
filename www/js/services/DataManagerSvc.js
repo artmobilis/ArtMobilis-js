@@ -3,10 +3,10 @@ angular.module('starter')
 .service('DataManagerSvc', [function() {
   var that = this;
 
-  var _contents_loader = new JsonLoader();
-  var _markers_loader = new JsonLoader();
-  var _channels_loader = new JsonLoader();
-  var _loading_manager = new LoadingManager();
+  var _contents_loader = new AM.JsonLoader();
+  var _markers_loader = new AM.JsonLoader();
+  var _channels_loader = new AM.JsonLoader();
+  var _loading_manager = new AM.LoadingManager();
 
   var _presets_loaded = false;
 

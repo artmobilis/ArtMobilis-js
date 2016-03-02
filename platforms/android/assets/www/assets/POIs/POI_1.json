@@ -4,22 +4,24 @@
   "latitude": 43.714253,
   "longitude": 7.2890073,
   "radius": 2000,
+  "landmark": {
+  },
   "channels": [
     {
       "uuid": "channel_tag",
-      "object": "mesh_landmark",
+      "object": "mesh_polyhedron",
       "longitude": 43.714438,
       "latitude": 7.289294,
-      "altitude": 10,
-      "scale": 10
+      "altitude": 4,
+      "scale": 2
     },
     {
       "uuid": "channel_image",
-      "object": "mesh_landmark",
+      "object": "mesh_polyhedron",
       "longitude": 43.714600,
       "latitude": 7.288657,
-      "altitude": 10,
-      "scale": 10
+      "altitude": 4,
+      "scale": 2
     }
   ]
 }

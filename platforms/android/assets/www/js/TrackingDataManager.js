@@ -15,13 +15,13 @@ TrackingDataManager = function() {
   var _assets_loaded = false;
   
 
-  this.AddMarker = function(url, uuid, name, tag_id, image_id) {
+  this.AddMarker = function(url, uuid, name, tag_id, is_image) {
     _markers[uuid] =
     {
       img: url,
       name: name || 'unnamed marker',
       is_tag: (tag_id != undefined),
-      is_image: image_id === true,
+      is_image: (is_image == true),
       tag_id: tag_id
     };
   };

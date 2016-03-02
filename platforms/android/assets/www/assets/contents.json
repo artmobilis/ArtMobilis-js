@@ -28,5 +28,10 @@
     "uuid": "banana",
     "name": "Banana",
     "object": "mesh_banana"
+  },
+  {
+    "uuid": "bouc",
+    "name": "Bouc",
+    "object": "object_bouc"
   }
 ]

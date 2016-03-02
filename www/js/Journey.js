@@ -10,7 +10,7 @@ Journey = function() {
 
   var _root;
 
-  var _json_loader = new JsonLoader();
+  var _json_loader = new AM.JsonLoader();
 
 
   this.Load = function(url, on_load, on_error) {
@@ -18,7 +18,7 @@ Journey = function() {
       return;
 
     _loading = true;
-    var loader = new JsonLoader();
+    var loader = new AM.JsonLoader();
 
     loader.Load(url, function() {
       _loading = false;

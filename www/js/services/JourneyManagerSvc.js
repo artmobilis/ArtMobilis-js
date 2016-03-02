@@ -16,7 +16,7 @@ angular.module('starter')
 
   var _running = false;
 
-  var _object_loader = new ObjectLoaderAM();
+  var _object_loader = new AMTHREE.ObjectLoader();
 
   function DispatchEventModeChange() {
     var event = new Event('journey_mode_change');
@@ -133,16 +133,16 @@ angular.module('starter')
       _running = true;
       document.addEventListener('device_move_xy', OnDeviceMove, false);
       _mode = that.MODE_NAVIGATION;
-      DispatchEventModeChange();
       GeolocationSvc.Start();
+      DispatchEventModeChange();
     }
   };
 
   this.Stop = function() {
     if (_running) {
+      GeolocationSvc.Stop();
       document.removeEventListener('device_move_xy', OnDeviceMove, false);
       _running = false;
-      _journey = undefined;
     }
   };
 

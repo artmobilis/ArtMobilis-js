@@ -55,6 +55,24 @@
           20,
           5
         ]
+      },
+      {
+        "type": "Mesh",
+        "uuid": "object_bouc",
+        "geometry": "geo_plane",
+        "material": "mat_lehublot",
+        "children": [
+          {
+            "type": "Sound",
+            "src": "./assets/sounds/bouc.mp3"
+          }
+        ]
+      },
+      {
+        "type": "Mesh",
+        "uuid": "mesh_polyhedron",
+        "geometry": "geo_polyhedron",
+        "material": "mat_phong_blue"
       }
     ]
   },
@@ -78,6 +96,12 @@
       "radius": 1,
       "widthSegments": 20,
       "heightSegments": 11
+    },
+    {
+      "type": "OctahedronGeometry",
+      "uuid": "geo_polyhedron",
+      "radius": 1,
+      "detail": 0
     }
   ],
   "materials": [

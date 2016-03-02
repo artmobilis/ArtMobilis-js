@@ -4,7 +4,7 @@ angular.module('starter')
   MarkerDetectorSvc, CameraSvc, LoadingSvc, CoordinatesConverterSvc) {
   var that = this;
 
-  var _image_loader = new ImageLoader();
+  var _image_loader = new AM.ImageLoader();
   var _camera_video_element = CameraSvc.GetVideoElement();
 
   var _running = false;
@@ -12,11 +12,11 @@ angular.module('starter')
 
   var _journey;
 
-  var _loading_manager = new LoadingManager();
-  var _starting_manager = new LoadingManager();
+  var _loading_manager = new AM.LoadingManager();
+  var _starting_manager = new AM.LoadingManager();
 
   var _canvas3d = document.createElement('canvas');
-  var _scene = new Scene( {
+  var _scene = new AMTHREE.Scene( {
     gps_converter: function(latitude, longitude) {
       return CoordinatesConverterSvc.ConvertLocalCoordinates(latitude, longitude);
     },
@@ -30,9 +30,9 @@ angular.module('starter')
   _canvas2d.style = "position: absolute; left:0px; right:0px; background-color: transparent;";
   var _context2d = _canvas2d.getContext('2d');
 
-  var _orientation_control = new DeviceOrientationControl(_scene.GetCamera());
+  var _orientation_control = new AM.DeviceOrientationControl(_scene.GetCamera());
 
-  var _tracked_obj_manager = new TrackedObjManager( { camera: _scene.GetCamera() } );
+  var _tracked_obj_manager = new AMTHREE.TrackedObjManager( { camera: _scene.GetCamera(), lerp_factor: 0.05 } );
 
   var _poi_limit_obj = new THREE.Mesh(new THREE.RingGeometry(1, 1.3, 64),
     new THREE.MeshBasicMaterial( { color: 0x41A3DC, opacity: 0.5, transparent: true, side: THREE.DoubleSide } ));
@@ -61,33 +61,25 @@ angular.module('starter')
         var channel = DataManagerSvc.tracking_data_manager.GetChannel(channel_uuid);
         var marker = DataManagerSvc.tracking_data_manager.GetMarker(channel.marker);
 
-        MarkerDetectorSvc.AddMarker(marker.img, poi_channel.uuid);
+        if (marker.is_image)
+          MarkerDetectorSvc.AddMarker(marker.img, channel_uuid);
 
         var object = DataManagerSvc.tracking_data_manager.BuildChannelContents(channel_uuid);
 
-        _tracked_obj_manager.Add(object, channel_uuid, function(o) {
-
-          o.traverse(function(s) {
-            if (s instanceof THREE.Mesh
-              && s.material
-              && s.material.map
-              && s.material.map.play)
-              s.material.map.play();
+        (function(channel_uuid) {
+          _tracked_obj_manager.Add(object, channel_uuid, function(o) {
+            AMTHREE.PlayAnimatedTextures(o);
+            AMTHREE.PlaySounds(o);
+            _scene.AddObject(o);
+            MarkerDetectorSvc.ActiveAllMarkers(false);
+            MarkerDetectorSvc.ActiveMarker(channel_uuid, true);
+          }, function(o) {
+            _scene.RemoveObject(o);
+            AMTHREE.StopSounds(o);
+            AMTHREE.StopAnimatedTextures(o);
+            MarkerDetectorSvc.ActiveAllMarkers(true);
           });
-
-          _scene.AddObject(o);
-        }, function(o) {
-
-          o.traverse(function(s) {
-            if (s instanceof THREE.Mesh
-              && s.material
-              && s.material.map
-              && s.material.map.stop)
-              s.material.map.stop();
-          });
-
-          _scene.RemoveObject(o);
-        });
+        })(channel_uuid);
 
       }
       
@@ -274,6 +266,7 @@ angular.module('starter')
       return;
     
     _starting_manager.OnEnd(function() {
+      JourneyManagerSvc.Stop();
       _scene.StopFullWindow();
       document.removeEventListener('journey_mode_change', OnJourneyModeChange, false);
       document.removeEventListener('device_move_xy', OnDeviceMove, false);
@@ -340,7 +333,7 @@ angular.module('starter')
     for (poi of pois) {
       poi_position.x = poi.position.x;
       poi_position.z = poi.position.y;
-      var position = THREEx.WorldToCanvasPosition(poi_position, _scene.GetCamera(), _canvas2d);
+      var position = AMTHREE.WorldToCanvasPosition(poi_position, _scene.GetCamera(), _canvas2d);
 
       if (position.z < 1) {
         var x = position.x;
@@ -389,20 +382,6 @@ angular.module('starter')
 
 
 })
-
-THREEx.WorldToCanvasPosition = function() {
-  var vec = new THREE.Vector3();
-
-  return function(position, camera, canvas) {
-    vec.copy(position);
-    vec.project(camera);
-
-    var x = Math.round( (vec.x + 1) * canvas.width / 2 );
-    var y = Math.round( (-vec.y + 1) * canvas.height / 2 );
-
-    return { x: x, y: y, z: vec.z };
-  };
-}();
 
 DrawBubble = function(ctx, x, y, width, height, radius) {
   var x_min = x - (width / 2);

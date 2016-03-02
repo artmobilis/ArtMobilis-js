@@ -51,19 +51,13 @@
   {
     "uuid": "marker_1",
     "name": "Marker 1",
-    "url": "assets/images/3Dtricart.jpg",
+    "url": "assets/images/3Dtricart_sq.jpg",
     "is_image": true
   },
   {
     "uuid": "marker_1023",
     "name": "Marker 1023",
     "url": "assets/images/tag_1023.jpg",
-    "is_image": true
-  },
-  {
-    "uuid": "marker_keyboard",
-    "name": "Marker Keyboard",
-    "url": "assets/images/keyboard.jpg",
     "is_image": true
   }
 ]

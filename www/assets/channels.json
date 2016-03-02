@@ -17,17 +17,7 @@
     "contents": [
       {
         "uuid": "lehublot",
-        "scale": 0.6
-      }
-    ]
-  },
-  {
-    "uuid": "channel_image_keyboard",
-    "marker": "marker_keyboard",
-    "contents": [
-      {
-        "uuid": "lehublot",
-        "scale": 0.75
+        "scale": 0.5
       }
     ]
   }

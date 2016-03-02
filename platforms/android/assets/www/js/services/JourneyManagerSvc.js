@@ -150,7 +150,7 @@ angular.module('starter')
     return _running;
   };
 
-  this.GetLandmarks = function() {
+  this.GetPOILandmarks = function() {
     var object = new THREE.Object3D();
 
     for (poi of _journey.GetPOIs()) {
@@ -174,6 +174,27 @@ angular.module('starter')
     }
 
     return object;
+  };
+
+  this.GetPOIChannelsLandmarks = function() {
+    var poi = _current_poi;
+
+    var landmarks = new THREE.Object3D();
+
+    for (channel of poi.channels) {
+      var obj = DataManagerSvc.tracking_data_manager.GetObject(channel.object);
+      if (typeof obj !== 'undefined') {
+        obj = obj.clone();
+        var position = CoordinatesConverterSvc.ConvertLocalCoordinates(channel.longitude, channel.latitude);
+        obj.position.x = position.x;
+        obj.position.z = position.y;
+        obj.y = channel.altitude || 0;
+        obj.scale.x = obj.scale.y = obj.scale.z = channel.scale || 1;
+        landmarks.add(obj);
+      }
+    }
+
+    return landmarks;
   };
 
   this.ForceNavigationMode = function(force_navigation) {

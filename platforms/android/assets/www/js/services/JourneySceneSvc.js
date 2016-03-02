@@ -32,7 +32,7 @@ angular.module('starter')
 
   var _orientation_control = new DeviceOrientationControl(_scene.GetCamera());
 
-  var _tracked_obj_manager = new TrackedObjManager( { camera: _scene.GetCamera() } );
+  var _tracked_obj_manager = new TrackedObjManager( { camera: _scene.GetCamera(), lerp_factor: 0.05 } );
 
   var _poi_limit_obj = new THREE.Mesh(new THREE.RingGeometry(1, 1.3, 64),
     new THREE.MeshBasicMaterial( { color: 0x41A3DC, opacity: 0.5, transparent: true, side: THREE.DoubleSide } ));
@@ -41,7 +41,7 @@ angular.module('starter')
 
   var _poi_landmarks;
 
-  var _channels_landmarks = new THREE.Object3D();
+  var _channels_landmarks;
 
 
   function OnWindowResize() {
@@ -61,33 +61,25 @@ angular.module('starter')
         var channel = DataManagerSvc.tracking_data_manager.GetChannel(channel_uuid);
         var marker = DataManagerSvc.tracking_data_manager.GetMarker(channel.marker);
 
-        MarkerDetectorSvc.AddMarker(marker.img, poi_channel.uuid);
+        if (marker.is_image)
+          MarkerDetectorSvc.AddMarker(marker.img, channel_uuid);
 
         var object = DataManagerSvc.tracking_data_manager.BuildChannelContents(channel_uuid);
 
-        _tracked_obj_manager.Add(object, channel_uuid, function(o) {
-
-          o.traverse(function(s) {
-            if (s instanceof THREE.Mesh
-              && s.material
-              && s.material.map
-              && s.material.map.play)
-              s.material.map.play();
+        (function(channel_uuid) {
+          _tracked_obj_manager.Add(object, channel_uuid, function(o) {
+            AMTHREE.PlayAnimatedTextures(o);
+            AMTHREE.PlaySounds(o);
+            _scene.AddObject(o);
+            MarkerDetectorSvc.ActiveAllMarkers(false);
+            MarkerDetectorSvc.ActiveMarker(channel_uuid, true);
+          }, function(o) {
+            _scene.RemoveObject(o);
+            AMTHREE.StopSounds(o);
+            AMTHREE.StopAnimatedTextures(o);
+            MarkerDetectorSvc.ActiveAllMarkers(true);
           });
-
-          _scene.AddObject(o);
-        }, function(o) {
-
-          o.traverse(function(s) {
-            if (s instanceof THREE.Mesh
-              && s.material
-              && s.material.map
-              && s.material.map.stop)
-              s.material.map.stop();
-          });
-
-          _scene.RemoveObject(o);
-        });
+        })(channel_uuid);
 
       }
       
@@ -104,29 +96,14 @@ angular.module('starter')
     _poi_limit_obj.position.z = poi.position.y;
     _scene.AddObject(_poi_limit_obj);
 
-
-    for (channel of poi.channels) {
-      var obj = DataManagerSvc.tracking_data_manager.GetObject(channel.object);
-      if (typeof obj !== 'undefined') {
-        obj = obj.clone();
-        var position = CoordinatesConverterSvc.ConvertLocalCoordinates(channel.longitude, channel.latitude);
-        obj.position.x = position.x;
-        obj.position.z = position.y;
-        obj.y = channel.altitude || 0;
-        obj.scale.x = obj.scale.y = obj.scale.z = channel.scale || 1;
-        _channels_landmarks.add(obj);
-      }
-    }
+    _channels_landmarks = JourneyManagerSvc.GetPOIChannelsLandmarks();
     _scene.AddObject(_channels_landmarks);
   }
 
   function OnExitPOI() {
     _scene.RemoveObject(_poi_limit_obj);
     _scene.RemoveObject(_channels_landmarks);
-
-    while (_channels_landmarks.children.length !== 0) {
-      _channels_landmarks.remove(_channels_landmarks.children[0]);
-    }
+    _channels_landmarks = undefined;
 
     MarkerDetectorSvc.ClearMarkers();
     _tracked_obj_manager.Clear();
@@ -189,7 +166,7 @@ angular.module('starter')
 
         JourneyManagerSvc.SetJourney(_journey);
 
-        AddLandmarks();
+        AddPOILandmarks();
 
         LoadingSvc.End();
         _loading_manager.End();
@@ -212,12 +189,12 @@ angular.module('starter')
     });
   }
 
-  function AddLandmarks() {
+  function AddPOILandmarks() {
     LoadingSvc.Start();
     _loading_manager.Start();
 
     DataManagerSvc.OnLoad(function() {
-      _poi_landmarks = JourneyManagerSvc.GetLandmarks();
+      _poi_landmarks = JourneyManagerSvc.GetPOILandmarks();
       _scene.AddObject(_poi_landmarks);
       _loading_manager.End();
       LoadingSvc.End();
@@ -355,17 +332,17 @@ angular.module('starter')
     for (poi of pois) {
       poi_position.x = poi.position.x;
       poi_position.z = poi.position.y;
-      var position = THREEx.WorldToCanvasPosition(poi_position, _scene.GetCamera(), _canvas2d);
+      var position = AMTHREE.WorldToCanvasPosition(poi_position, _scene.GetCamera(), _canvas2d);
 
       if (position.z < 1) {
         var x = position.x;
         var y = _canvas2d.height - 100;
-        var width = 130;
-        var height = 75;
+        var width = 120;
+        var height = 58;
         DrawBubble(_context2d, x, y, width, height, 10);
 
         var distance = (cam_pos.distanceTo(poi_position) / 1000).toFixed(1);
-        var padding = 5;
+        var padding = 6;
         var size_max = width - 2 * padding;
         var line = 0;
         var font_size = 17;
@@ -404,20 +381,6 @@ angular.module('starter')
 
 
 })
-
-THREEx.WorldToCanvasPosition = function() {
-  var vec = new THREE.Vector3();
-
-  return function(position, camera, canvas) {
-    vec.copy(position);
-    vec.project(camera);
-
-    var x = Math.round( (vec.x + 1) * canvas.width / 2 );
-    var y = Math.round( (-vec.y + 1) * canvas.height / 2 );
-
-    return { x: x, y: y, z: vec.z };
-  };
-}();
 
 DrawBubble = function(ctx, x, y, width, height, radius) {
   var x_min = x - (width / 2);
