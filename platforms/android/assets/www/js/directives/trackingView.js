@@ -19,7 +19,7 @@ angular.module('starter')
         var _canvas = JourneySceneSvc.GetCanvas();
         var _canvas_appended = false;
 
-        var _device_lock_screen = new DeviceLockScreenOrientation();
+        var _device_lock_screen = new AM.DeviceLockScreenOrientation();
 
         var _running = false;
         var _destroyed = false;

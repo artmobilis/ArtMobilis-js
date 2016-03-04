@@ -1,26 +1,26 @@
 {
   "uuid": "poi_1",
-  "name": "Le Hublot",
-  "latitude": 43.714253,
-  "longitude": 7.2890073,
-  "radius": 2000,
+  "name": "Bureau",
+  "latitude": 43.714214,
+  "longitude": 7.288949,
+  "radius": 1000,
   "landmark": {
   },
   "channels": [
     {
       "uuid": "channel_tag",
       "object": "mesh_polyhedron",
-      "longitude": 43.714438,
-      "latitude": 7.289294,
-      "altitude": 4,
+      "longitude": 43.714219,
+      "latitude": 7.289030,
+      "altitude": 6,
       "scale": 2
     },
     {
       "uuid": "channel_image",
       "object": "mesh_polyhedron",
-      "longitude": 43.714600,
-      "latitude": 7.288657,
-      "altitude": 4,
+      "longitude": 43.714238,
+      "latitude": 7.288872,
+      "altitude": 6,
       "scale": 2
     }
   ]

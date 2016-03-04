@@ -15,7 +15,7 @@ angular.module('starter')
   var _frame = 0;
   var _frame_worker = 0;
 
-  var _image_loader = new ImageLoader();
+  var _image_loader = new AM.ImageLoader();
 
   var _on_added_callbacks = {};
 
@@ -28,6 +28,9 @@ angular.module('starter')
 
   this.Start = function(video_element) {
     if (!_worker) {
+      _frame = 0;
+      _frame_worker = 0;
+
       _video = video_element;
       _worker = new Worker('js/MarkerDetectorWorker.js');
       _worker.onmessage = function(e) {
@@ -55,8 +58,8 @@ angular.module('starter')
   this.Update = function() {
 
     if (_worker && _video instanceof HTMLVideoElement
-      && _video.readyState == _video.HAVE_ENOUGH_DATA
-      && (_frame - _frame_worker < 2)) {
+      && _video.readyState === _video.HAVE_ENOUGH_DATA
+      && (_frame - _frame_worker < 1)) {
 
       ++_frame;
 
@@ -65,7 +68,6 @@ angular.module('starter')
       _ctx.drawImage(_video, 0, 0, _canvas.width, _canvas.height);
 
       var image = _ctx.getImageData(0, 0, _canvas.width, _canvas.height);
-      var size = image.width * image.height * 4;
 
       var obj_data = {
         cmd: 'new_img',
@@ -161,7 +163,7 @@ angular.module('starter')
           _worker.postMessage(msg, [msg.image_data.data.buffer]);
 
         }
-      }(url, uuid));
+      }(url, uuid), true);
 
     } else
       if (on_end) on_end();

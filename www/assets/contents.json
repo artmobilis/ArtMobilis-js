@@ -25,21 +25,8 @@
     "object": "mesh_frozen"
   },
   {
-    "uuid": "banana",
-    "name": "Banana",
-    "object": "mesh_banana"
-  },
-  {
     "uuid": "bouc",
     "name": "Bouc",
     "object": "object_bouc"
-  },
-  {
-    "uuid": "cantine",
-    "object": "object_cantine"
-  },
-  {
-    "uuid": "cantine_nature",
-    "object": "object_cantine_nature"
   }
 ]

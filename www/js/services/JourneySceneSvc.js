@@ -25,6 +25,7 @@ angular.module('starter')
   } );
   _scene.SetFullWindow();
   _scene.AddObject(new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 ));
+  _scene.AddObject(new THREE.AmbientLight( 0x404040 ));
 
   var _canvas2d = document.createElement('canvas');
   _canvas2d.style = "position: absolute; left:0px; right:0px; background-color: transparent;";
@@ -32,7 +33,11 @@ angular.module('starter')
 
   var _orientation_control = new AM.DeviceOrientationControl(_scene.GetCamera());
 
-  var _tracked_obj_manager = new AMTHREE.TrackedObjManager( { camera: _scene.GetCamera(), lerp_factor: 0.05 } );
+  var _tracked_obj_manager = new AMTHREE.TrackedObjManager( {
+    camera: _scene.GetCamera(),
+    lerp_factor: 0.05,
+    timeout: 10
+  } );
 
   var _poi_limit_obj = new THREE.Mesh(new THREE.RingGeometry(1, 1.3, 64),
     new THREE.MeshBasicMaterial( { color: 0x41A3DC, opacity: 0.5, transparent: true, side: THREE.DoubleSide } ));
@@ -328,8 +333,6 @@ angular.module('starter')
 
     cam_pos.setFromMatrixPosition(_scene.GetCamera().matrixWorld);
 
-    _context2d.fillStyle = "rgba(15, 15, 15, 0.75)";
-
     for (poi of pois) {
       poi_position.x = poi.position.x;
       poi_position.z = poi.position.y;
@@ -340,9 +343,11 @@ angular.module('starter')
         var y = _canvas2d.height - 100;
         var width = 120;
         var height = 58;
+
+        _context2d.fillStyle = "rgba(15, 15, 15, 0.75)";
         DrawBubble(_context2d, x, y, width, height, 10);
 
-        var distance = (cam_pos.distanceTo(poi_position) / 1000).toFixed(1);
+        var distance = (cam_pos.distanceTo(poi_position) / 1000).toFixed(2);
         var padding = 6;
         var size_max = width - 2 * padding;
         var line = 0;
@@ -353,7 +358,10 @@ angular.module('starter')
         line = y - height / 2 + font_size + padding;
         _context2d.fillText(poi.name, x - width / 2 + padding, line, size_max);
         line += font_size + padding;
-        _context2d.fillText(distance + ' km', x - width / 2 + padding, line, size_max);
+        if (distance >= 1)
+          _context2d.fillText(distance + ' km', x - width / 2 + padding, line, size_max);
+        else
+          _context2d.fillText((distance * 1000) + ' m', x - width / 2 + padding, line, size_max);
 
       }
     }
@@ -375,7 +383,8 @@ angular.module('starter')
     _context2d.clearRect(0, 0, _canvas2d.width, _canvas2d.height);
     _context2d.drawImage(_canvas3d, 0, 0);
 
-    UpdateBubbles();
+    if (JourneyManagerSvc.GetMode() !== JourneyManagerSvc.MODE_POI)
+      UpdateBubbles();
 
     MarkerDetectorSvc.Empty();
   };

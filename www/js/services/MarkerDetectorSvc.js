@@ -59,7 +59,7 @@ angular.module('starter')
 
     if (_worker && _video instanceof HTMLVideoElement
       && _video.readyState === _video.HAVE_ENOUGH_DATA
-      && (_frame - _frame_worker < 2)) {
+      && (_frame - _frame_worker < 1)) {
 
       ++_frame;
 

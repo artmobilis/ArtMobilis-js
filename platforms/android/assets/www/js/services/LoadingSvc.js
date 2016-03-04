@@ -3,7 +3,7 @@ angular.module('starter')
 .service('LoadingSvc', function() {
   var that = this;
 
-  var _loading_manager = new LoadingManager();
+  var _loading_manager = new AM.LoadingManager();
 
   var _end_nbr;
   var _loading_nbr;

@@ -41,30 +41,13 @@
       },
       {
         "type": "Mesh",
-        "uuid": "mesh_banana",
-        "geometry": "geo_plane",
-        "material": "mat_banana"
-      },
-      {
-        "type": "Mesh",
-        "uuid": "mesh_landmark",
-        "geometry": "geo_box",
-        "material": "mat_phong_red",
-        "scale": [
-          5,
-          20,
-          5
-        ]
-      },
-      {
-        "type": "Mesh",
         "uuid": "object_bouc",
         "geometry": "geo_plane",
         "material": "mat_lehublot",
         "children": [
           {
             "type": "Sound",
-            "src": "./assets/sounds/bouc.mp3"
+            "url": "./assets/sounds/bouc.mp3"
           }
         ]
       },
@@ -73,11 +56,6 @@
         "uuid": "mesh_polyhedron",
         "geometry": "geo_polyhedron",
         "material": "mat_phong_blue"
-      },
-      {
-        "type": "Collada",
-        "uuid": "object_cantine",
-        "url": "cantine_seule.dae"
       }
     ]
   },
@@ -137,12 +115,6 @@
       "uuid": "mat_frozen",
       "map": "text_frozen",
       "side": 2
-    },
-    {
-      "type": "MeshBasicMaterial",
-      "uuid": "mat_banana",
-      "map": "text_banana",
-      "side": 2
     }
   ],
   "textures": [
@@ -155,21 +127,12 @@
       "uuid": "text_frozen",
       "video": "vid_frozen",
       "loop": true
-    },
-    {
-      "uuid": "text_banana",
-      "image": "img_banana",
-      "animated": true
     }
   ],
   "images": [
     {
       "uuid": "img_lehublot",
       "url": "lehublot.jpg"
-    },
-    {
-      "uuid": "img_banana",
-      "url": "banana.gif"
     }
   ],
   "videos": [

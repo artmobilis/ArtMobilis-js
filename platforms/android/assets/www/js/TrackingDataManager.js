@@ -7,7 +7,7 @@ TrackingDataManager = function() {
   var _channels = {};
 
   var _loading_manager = new THREE.LoadingManager();
-  var _object_loader = new ObjectLoaderAM(_loading_manager);
+  var _object_loader = new AMTHREE.ObjectLoader(_loading_manager);
 
   var _objects = {};
 
@@ -51,11 +51,6 @@ TrackingDataManager = function() {
       contents: [],
       name: name || 'unnamed channel'
     };
-
-    for (uuid in _channels) {
-      if (_channels[uuid].marker == channel.marker)
-        delete _channels[uuid];
-    }
 
     _channels[id] = channel;
 
@@ -315,13 +310,17 @@ TrackingDataManager = function() {
     var contents = that.GetContents(contents_transform.uuid) || {};
 
     if (typeof contents_transform.uuid !== 'undefined') {
-      channel.contents.push( {
+      var pos = contents_transform.position || {};
+      var rot = contents_transform.rotation || {};
+      var channel_contents = {
         uuid: contents_transform.uuid,
-        position: contents_transform.position || { x: 0, y: 0, z: 0 },
-        rotation: contents_transform.rotation || { x: 0, y: 0, z: 0 },
+        position: { x: pos.x || 0, y: pos.y || 0, z: pos.z || 0 },
+        rotation: { x: rot.x || 0, y: rot.y || 0, z: rot.z || 0 },
         scale: contents_transform.scale || 1,
         name: contents_transform.name || contents.name || ''
-      } );
+      };
+
+      channel.contents.push(channel_contents);
     }
   };
 

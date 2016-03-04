@@ -1,8 +1,7 @@
 [
   {
     "uuid": "channel_tag",
-    "name": "Channel le hublot",
-    "marker": "tag_1001",
+    "marker": "tag_10",
     "contents": [
       {
         "uuid": "frozen",

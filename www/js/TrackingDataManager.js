@@ -52,11 +52,6 @@ TrackingDataManager = function() {
       name: name || 'unnamed channel'
     };
 
-    for (uuid in _channels) {
-      if (_channels[uuid].marker == channel.marker)
-        delete _channels[uuid];
-    }
-
     _channels[id] = channel;
 
     for (contents_transform of contents_transforms) {

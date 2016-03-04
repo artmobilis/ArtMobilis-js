@@ -9,7 +9,7 @@ importScripts('../lib/aruco/posit1.js');
 // jsfeat
 importScripts('../lib/jsfeat/jsfeat.js');
 
-importScripts('../lib/ArtMobilib2/artmobilib.js');
+importScripts('../lib/ArtMobilib/artmobilib.js');
 
 
 
