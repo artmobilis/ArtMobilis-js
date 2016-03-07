@@ -22,7 +22,7 @@ var _marker_tracker_enabled = true;
 _marker_tracker.SetParameters({
   laplacian_threshold: 30,
   eigen_threshold: 25,
-  detection_corners_max: 300,
+  detection_corners_max: 200,
   match_threshold: 40,
   num_train_levels: 3,
   image_size_max: 256,
@@ -44,12 +44,12 @@ function SendResult(tags, marker, frame) {
 }
 
 function DetectMarkerImage(image_data) {
+  _marker_tracker.Log();
+
   _marker_tracker.ComputeImage(image_data);
   if (_marker_tracker.Match()) {
     return { corners: _marker_tracker.GetPose(), uuid: _marker_tracker.GetMatchUuid() };
   }
-
-  _marker_tracker.Log();
 
   return undefined;
 }

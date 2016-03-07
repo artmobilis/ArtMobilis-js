@@ -55,7 +55,7 @@ angular.module('starter')
         }
       }
 
-      _worker.postMessage( { cmd: 'enable_tag_detection', value: false } );
+      // _worker.postMessage( { cmd: 'enable_tag_detection', value: false } );
 
       document.body.onkeydown = function() {
         _enabled = !_enabled;

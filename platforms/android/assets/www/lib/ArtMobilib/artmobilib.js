@@ -1703,6 +1703,7 @@ AM.Detection = function() {
 
 AM.IcAngle = function() {
     var u_max = new Int32Array([ 15, 15, 15, 15, 14, 14, 14, 13, 13, 12, 11, 10, 9, 8, 6, 3, 0 ]);
+    var half_pi = Math.PI / 2;
     return function(img, px, py) {
         var half_k = 15;
         var m_01 = 0, m_10 = 0;
@@ -1721,9 +1722,13 @@ AM.IcAngle = function() {
             }
             m_01 += v * v_sum;
         }
-        return Math.atan2(m_01, m_10);
+        return AM.DiamondAngle(m_01, m_10) * half_pi;
     };
 }();
+
+AM.DiamondAngle = function(y, x) {
+    if (y >= 0) return x >= 0 ? y / (x + y) : 1 - x / (-x + y); else return x < 0 ? 2 - y / (-x - y) : 3 + x / (x - y);
+};
 
 AM.DetectKeypointsPostProc = function(img, corners, count, max_allowed) {
     if (count > max_allowed) {
@@ -1731,6 +1736,9 @@ AM.DetectKeypointsPostProc = function(img, corners, count, max_allowed) {
             return b.score < a.score;
         });
         count = max_allowed;
+    }
+    for (var i = 0; i < count; ++i) {
+        corners[i].angle = AM.IcAngle(img, corners[i].x, corners[i].y);
     }
     return count;
 };
@@ -1867,8 +1875,7 @@ AM.MarkerTracker = function() {
         return _detection.GetNumCorners();
     };
     this.Log = function() {
-        var s = _match_found ? "; match found" : "";
-        console.log(_profiler.log() + s);
+        console.log(_profiler.log() + (_match_found ? "<br/>match found" : ""));
     };
     this.SetParameters = function(params) {
         for (name in params) {

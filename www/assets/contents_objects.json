@@ -75,11 +75,6 @@
         "material": "mat_phong_blue"
       },
       {
-        "type": "Collada",
-        "uuid": "object_cantine2",
-        "url": "01cantine2.0.dae"
-      },
-      {
         "type": "ImagePlane",
         "uuid": "mesh_hub",
         "url": "lehublot.jpg"

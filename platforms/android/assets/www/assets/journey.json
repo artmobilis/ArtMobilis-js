@@ -2,6 +2,7 @@
   "name": "Journey 1",
   "POIs_root": "assets/POIs",
   "POIs": [
-    "POI_1.json"
+    "POI_1.json",
+    "POI_2.json"
   ]
 }

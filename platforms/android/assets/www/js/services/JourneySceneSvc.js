@@ -298,7 +298,7 @@ angular.module('starter')
     var marker_corners = MarkerDetectorSvc.GetMarker();
 
     for (tag of tags) {
-      // console.log('tag detected: ' + tag.id);
+      console.log('tag detected: ' + tag.id);
       for (poi_channel of JourneyManagerSvc.GetCurrentPOI().channels) {
         var channel = DataManagerSvc.tracking_data_manager.GetChannel(poi_channel.uuid);
         var marker = DataManagerSvc.tracking_data_manager.GetMarker(channel.marker);
@@ -313,7 +313,7 @@ angular.module('starter')
     }
 
     if (marker_corners) {
-      // console.log('marker detected: ' + marker_corners.uuid);
+      console.log('marker detected: ' + marker_corners.uuid);
       MarkerDetectorSvc.SetTransform(marker_corners);
       _tracked_obj_manager.TrackCompose(marker_corners.uuid,
         MarkerDetectorSvc.position,

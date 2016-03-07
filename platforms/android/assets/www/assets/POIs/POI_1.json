@@ -3,12 +3,28 @@
   "name": "Bureau",
   "latitude": 43.714214,
   "longitude": 7.288949,
-  "radius": 1000,
+  "radius": 10,
   "landmark": {
   },
   "channels": [
     {
       "uuid": "channel_tag",
+      "object": "mesh_polyhedron",
+      "longitude": 43.714219,
+      "latitude": 7.289030,
+      "altitude": 6,
+      "scale": 2
+    },
+    {
+      "uuid": "channel_tag3",
+      "object": "mesh_polyhedron",
+      "longitude": 43.714219,
+      "latitude": 7.289030,
+      "altitude": 6,
+      "scale": 2
+    },
+    {
+      "uuid": "channel_tag4",
       "object": "mesh_polyhedron",
       "longitude": 43.714219,
       "latitude": 7.289030,
