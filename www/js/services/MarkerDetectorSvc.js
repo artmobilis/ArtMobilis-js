@@ -19,7 +19,9 @@ angular.module('starter')
 
   var _on_added_callbacks = {};
 
-  this.video_scale_down = 1;
+  var _enabled = true;
+
+  this.video_size_target = 210;
 
   this.position = new THREE.Vector3();
   this.rotation = new THREE.Euler();
@@ -52,10 +54,26 @@ angular.module('starter')
           break;
         }
       }
+
+      // _worker.postMessage( { cmd: 'enable_tag_detection', value: false } );
+
+      document.body.onkeydown = function() {
+        _enabled = !_enabled;
+      };
     }
   };
 
+  function GetVideoNewSize(width, height) {
+    var ratio_w = that.video_size_target / width;
+    var ratio_h = that.video_size_target / height;
+
+    var ratio = Math.min(ratio_w, ratio_h, 1);
+    return { width: Math.round(width * ratio), height: Math.round(height * ratio) };
+  }
+
   this.Update = function() {
+    if (!_enabled)
+      return;
 
     if (_worker && _video instanceof HTMLVideoElement
       && _video.readyState === _video.HAVE_ENOUGH_DATA
@@ -63,8 +81,9 @@ angular.module('starter')
 
       ++_frame;
 
-      _canvas.width = _video.videoWidth / that.video_scale_down;
-      _canvas.height = _video.videoHeight / that.video_scale_down;
+      var new_size = GetVideoNewSize(_video.videoWidth, _video.videoHeight);
+      _canvas.width = new_size.width;
+      _canvas.height = new_size.height;
       _ctx.drawImage(_video, 0, 0, _canvas.width, _canvas.height);
 
       var image = _ctx.getImageData(0, 0, _canvas.width, _canvas.height);
@@ -128,13 +147,13 @@ angular.module('starter')
     that.scale.y = model_size;
     that.scale.z = model_size;
 
-    that.rotation.x = -Math.asin(-rot[1][2]);
-    that.rotation.y = -Math.atan2(rot[0][2], rot[2][2]);
-    that.rotation.z = Math.atan2(rot[1][0], rot[1][1]);
+    that.rotation.x = -Math.asin(-rot[1][2]) || 0;
+    that.rotation.y = -Math.atan2(rot[0][2], rot[2][2]) || 0;
+    that.rotation.z = Math.atan2(rot[1][0], rot[1][1]) || 0;
 
-    that.position.x = translation[0];
-    that.position.y = translation[1];
-    that.position.z = -translation[2];
+    that.position.x = translation[0] || 0;
+    that.position.y = translation[1] || 0;
+    that.position.z = -translation[2] || 0;
 
     that.quaternion.setFromEuler(that.rotation);
   };
@@ -177,15 +196,13 @@ angular.module('starter')
 
   this.ActiveMarker = function(uuid, bool) {
     if (_worker) {
-      var cmd = (bool) ? 'active' : 'desactive';
-      _worker.postMessage( { cmd: cmd, uuid: uuid } );
+      _worker.postMessage( { cmd: 'active', uuid: uuid, value: (bool == true) } );
     }
   };
 
   this.ActiveAllMarkers = function(bool) {
     if (_worker) {
-      var cmd = (bool) ? 'active_all' : 'desactive_all';
-      _worker.postMessage( { cmd: cmd } );
+      _worker.postMessage( { cmd: 'active_all', value: (bool == true) } );
     }
   };
 

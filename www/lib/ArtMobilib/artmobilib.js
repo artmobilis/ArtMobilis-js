@@ -1138,7 +1138,6 @@ if (typeof THREE !== "undefined") {
                     }
                     object = new THREE.Group();
                     var url = that.constants.model_path + "/" + data.url;
-                    console.log(url);
                     that.manager.itemStart(url);
                     collada_loader.load(url, function(object, data, manager, url) {
                         return function(collada) {
@@ -1390,20 +1389,19 @@ if (typeof THREE !== "undefined") {
         var that = this;
         var _clock = new THREE.Clock(true);
         var _holder = new AMTHREE.TrackedObjManager.prototype.Holder();
+        function LerpObjectsTransforms(src, dst, factor) {
+            src.position.lerp(dst.position, factor);
+            src.quaternion.slerp(dst.quaternion, factor);
+            src.scale.lerp(dst.scale, factor);
+        }
         function UpdateLerpMethod() {
             _holder.ForEach(function(elem) {
-                if (elem.enabled) {
-                    var obj = elem.object;
-                    var target = elem.target;
-                    obj.position.lerp(target.position, that.lerp_factor);
-                    obj.quaternion.slerp(target.quaternion, that.lerp_factor);
-                    obj.scale.lerp(target.scale, that.lerp_factor);
-                }
+                if (elem.enabled) LerpObjectsTransforms(elem.object, elem.target, that.lerp_factor);
             });
         }
         var _update_method = UpdateLerpMethod;
         this.camera = parameters.camera;
-        this.lerp_factor = parameters.lerp_factor || .2;
+        this.lerp_factor = parameters.lerp_factor || .8;
         this.timeout = parameters.timeout || 6;
         this.Add = function(object, uuid, on_enable, on_disable) {
             _holder.Add(object, uuid, on_enable, on_disable);
@@ -1421,6 +1419,7 @@ if (typeof THREE !== "undefined") {
         };
         this.Track = function() {
             var new_matrix = new THREE.Matrix4();
+            var obj_tmp = new THREE.Object3D();
             return function(uuid, matrix) {
                 if (that.camera) {
                     var elem = _holder.Get(uuid);
@@ -1428,8 +1427,11 @@ if (typeof THREE !== "undefined") {
                         var target = elem.target;
                         new_matrix.copy(that.camera.matrixWorld);
                         new_matrix.multiply(matrix);
-                        new_matrix.decompose(target.position, target.quaternion, target.scale);
-                        if (!elem.enabled) {
+                        if (elem.enabled) {
+                            new_matrix.decompose(obj_tmp.position, obj_tmp.quaternion, obj_tmp.scale);
+                            LerpObjectsTransforms(target, obj_tmp, that.lerp_factor);
+                        } else {
+                            new_matrix.decompose(target.position, target.quaternion, target.scale);
                             new_matrix.decompose(elem.object.position, elem.object.quaternion, elem.object.scale);
                         }
                         _holder.Track(uuid);
@@ -1664,8 +1666,8 @@ AM.Detection = function() {
         laplacian_threshold: 30,
         eigen_threshold: 25,
         detection_corners_max: 500,
-        border_size: 3,
-        fast_threshold: 48
+        border_size: 15,
+        fast_threshold: 20
     };
     var _screen_corners = [];
     var _num_corners = 0;
@@ -1680,7 +1682,7 @@ AM.Detection = function() {
     }
     this.Detect = function(img) {
         AllocateCorners(img.cols, img.rows);
-        _num_corners = AM.DetectKeypointsYape06(img, _screen_corners, _params.detection_corners_max, _params.laplacian_threshold, _params.eigen_threshold);
+        _num_corners = AM.DetectKeypointsYape06(img, _screen_corners, _params.detection_corners_max, _params.laplacian_threshold, _params.eigen_threshold, _params.border_size);
         jsfeat.orb.describe(img, _screen_corners, _num_corners, _screen_descriptors);
     };
     this.SetParameters = function(params) {
@@ -1701,6 +1703,7 @@ AM.Detection = function() {
 
 AM.IcAngle = function() {
     var u_max = new Int32Array([ 15, 15, 15, 15, 14, 14, 14, 13, 13, 12, 11, 10, 9, 8, 6, 3, 0 ]);
+    var half_pi = Math.PI / 2;
     return function(img, px, py) {
         var half_k = 15;
         var m_01 = 0, m_10 = 0;
@@ -1719,9 +1722,13 @@ AM.IcAngle = function() {
             }
             m_01 += v * v_sum;
         }
-        return Math.atan2(m_01, m_10);
+        return AM.DiamondAngle(m_01, m_10) * half_pi;
     };
 }();
+
+AM.DiamondAngle = function(y, x) {
+    if (y >= 0) return x >= 0 ? y / (x + y) : 1 - x / (-x + y); else return x < 0 ? 2 - y / (-x - y) : 3 + x / (x - y);
+};
 
 AM.DetectKeypointsPostProc = function(img, corners, count, max_allowed) {
     if (count > max_allowed) {
@@ -1736,10 +1743,10 @@ AM.DetectKeypointsPostProc = function(img, corners, count, max_allowed) {
     return count;
 };
 
-AM.DetectKeypointsYape06 = function(img, corners, max_allowed, laplacian_threshold, eigen_threshold) {
+AM.DetectKeypointsYape06 = function(img, corners, max_allowed, laplacian_threshold, eigen_threshold, border_size) {
     jsfeat.yape06.laplacian_threshold = laplacian_threshold;
     jsfeat.yape06.min_eigen_value_threshold = eigen_threshold;
-    var count = jsfeat.yape06.detect(img, corners, 17);
+    var count = jsfeat.yape06.detect(img, corners, border_size);
     count = AM.DetectKeypointsPostProc(img, corners, count, max_allowed);
     return count;
 };
@@ -1868,7 +1875,7 @@ AM.MarkerTracker = function() {
         return _detection.GetNumCorners();
     };
     this.Log = function() {
-        console.log(_profiler.log());
+        console.log(_profiler.log() + (_match_found ? "<br/>match found" : ""));
     };
     this.SetParameters = function(params) {
         for (name in params) {
@@ -1894,59 +1901,85 @@ AM.Matching = function() {
         _screen_descriptors = screen_descriptors;
     };
     this.Match = function(pattern_descriptors) {
-        function popcnt32(n) {
-            n -= n >> 1 & 1431655765;
-            n = (n & 858993459) + (n >> 2 & 858993459);
-            return (n + (n >> 4) & 252645135) * 16843009 >> 24;
-        }
-        function MatchPattern(screen_descriptors, pattern_descriptors) {
-            var q_cnt = screen_descriptors.rows;
-            var query_u32 = screen_descriptors.buffer.i32;
-            var qd_off = 0;
-            var num_matches = 0;
-            _matches.length = 0;
-            for (var qidx = 0; qidx < q_cnt; ++qidx) {
-                var best_dist = 256;
-                var best_dist2 = 256;
-                var best_idx = -1;
-                var best_lev = -1;
-                for (var lev = 0; lev < pattern_descriptors.length; ++lev) {
-                    var lev_descr = pattern_descriptors[lev];
-                    var ld_cnt = lev_descr.rows;
-                    var ld_i32 = lev_descr.buffer.i32;
-                    var ld_off = 0;
-                    for (var pidx = 0; pidx < ld_cnt; ++pidx) {
-                        var curr_d = 0;
-                        for (var k = 0; k < 8; ++k) {
-                            curr_d += popcnt32(query_u32[qd_off + k] ^ ld_i32[ld_off + k]);
-                        }
-                        if (curr_d < best_dist) {
-                            best_dist2 = best_dist;
-                            best_dist = curr_d;
-                            best_lev = lev;
-                            best_idx = pidx;
-                        } else if (curr_d < best_dist2) {
-                            best_dist2 = curr_d;
-                        }
-                        ld_off += 8;
-                    }
-                }
-                if (best_dist < _params.match_threshold) {
-                    while (_matches.length <= num_matches) {
-                        _matches.push(new AM.match_t());
-                    }
-                    _matches[num_matches].screen_idx = qidx;
-                    _matches[num_matches].pattern_lev = best_lev;
-                    _matches[num_matches].pattern_idx = best_idx;
-                    num_matches++;
-                }
-                qd_off += 8;
-            }
-            return num_matches;
-        }
         _num_matches = MatchPattern(_screen_descriptors, pattern_descriptors);
         return _num_matches;
     };
+    function popcnt32(n) {
+        n -= n >> 1 & 1431655765;
+        n = (n & 858993459) + (n >> 2 & 858993459);
+        return (n + (n >> 4) & 252645135) * 16843009 >> 24;
+    }
+    var popcnt32_2 = function() {
+        var v2b = [ 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8 ];
+        var m8 = 255;
+        return function(n) {
+            var r = v2b[n & m8];
+            n = n >> 8;
+            r += v2b[n & m8];
+            n = n >> 8;
+            r += v2b[n & m8];
+            n = n >> 8;
+            r += v2b[n & m8];
+            return r;
+        };
+    }();
+    var popcnt32_3 = function() {
+        var v2b = [];
+        for (i = 0; i < 256 * 256; ++i) v2b.push(popcnt32(i));
+        var m16 = 65535;
+        return function(n) {
+            var r = v2b[n & m16];
+            n = n >> 16;
+            r += v2b[n & m16];
+            return r;
+        };
+    }();
+    function MatchPattern(screen_descriptors, pattern_descriptors) {
+        var q_cnt = screen_descriptors.rows;
+        var query_u32 = screen_descriptors.buffer.i32;
+        var qd_off = 0;
+        var num_matches = 0;
+        _matches = [];
+        for (var qidx = 0; qidx < q_cnt; ++qidx) {
+            var best_dist = 256;
+            var best_dist2 = 256;
+            var best_idx = -1;
+            var best_lev = -1;
+            for (var lev = 0, lev_max = pattern_descriptors.length; lev < lev_max; ++lev) {
+                var lev_descr = pattern_descriptors[lev];
+                var ld_cnt = lev_descr.rows;
+                var ld_i32 = lev_descr.buffer.i32;
+                var ld_off = 0;
+                for (var pidx = 0; pidx < ld_cnt; ++pidx) {
+                    var curr_d = 0;
+                    for (var k = 0; k < 8; ++k) {
+                        curr_d += popcnt32_3(query_u32[qd_off + k] ^ ld_i32[ld_off + k]);
+                    }
+                    if (curr_d < best_dist) {
+                        best_dist2 = best_dist;
+                        best_dist = curr_d;
+                        best_lev = lev;
+                        best_idx = pidx;
+                    } else if (curr_d < best_dist2) {
+                        best_dist2 = curr_d;
+                    }
+                    ld_off += 8;
+                }
+            }
+            if (best_dist < _params.match_threshold) {
+                while (_matches.length <= num_matches) {
+                    _matches.push(new AM.match_t());
+                }
+                _matches[num_matches].screen_idx = qidx;
+                _matches[num_matches].pattern_lev = best_lev;
+                _matches[num_matches].pattern_idx = best_idx;
+                num_matches++;
+            }
+            qd_off += 8;
+        }
+        _matches.length = num_matches;
+        return num_matches;
+    }
     this.GetMatches = function() {
         return _matches;
     };
@@ -1960,15 +1993,12 @@ AM.Matching = function() {
     };
 };
 
-AM.match_t = function() {
-    function match_t(screen_idx, pattern_lev, pattern_idx, distance) {
-        this.screen_idx = screen_idx || 0;
-        this.pattern_lev = pattern_lev || 0;
-        this.pattern_idx = pattern_idx || 0;
-        this.distance = distance || 0;
-    }
-    return match_t;
-}();
+AM.match_t = function(screen_idx, pattern_lev, pattern_idx, distance) {
+    this.screen_idx = screen_idx || 0;
+    this.pattern_lev = pattern_lev || 0;
+    this.pattern_idx = pattern_idx || 0;
+    this.distance = distance || 0;
+};
 
 var AM = AM || {};
 
