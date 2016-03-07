@@ -3828,6 +3828,11 @@ The references are:
                                 pt = points[number_of_points];
                                 pt.x = x, pt.y = y, pt.score = min_eigen_value;
                                 ++number_of_points;
+                                if (number_of_points >= points.length) {
+                                  console.log("Warning: number of corner detected exceeds allocated memory: " + points.length);
+                                    jsfeat.cache.put_buffer(lap_buf);
+                                    return number_of_points;
+                                }
                                 ++x, ++rowx; // skip next pixel since this is maxima in 3x3
                             }
                         }

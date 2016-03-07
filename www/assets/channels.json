@@ -1,0 +1,65 @@
+[
+  {
+    "uuid": "channel_tag",
+    "marker": "tag_10",
+    "contents": [
+      {
+        "uuid": "frozen",
+        "scale": 0.75
+      }
+    ]
+  },
+  {
+    "uuid": "channel_tag3",
+    "marker": "tag_200",
+    "contents": [
+      {
+        "uuid": "arcciel",
+        "scale": 0.75
+      }
+    ]
+  },
+  {
+    "uuid": "channel_tag4",
+    "marker": "tag_1001",
+    "contents": [
+      {
+        "uuid": "frozen",
+        "scale": 0.75
+      }
+    ]
+  },
+  {
+    "uuid": "channel_image",
+    "name": "Channel image",
+    "marker": "marker_1",
+    "contents": [
+      {
+        "uuid": "lehublot",
+        "scale": 0.5
+      }
+    ]
+  },
+  {
+    "uuid": "channel_tag2",
+    "name": "Channel 1",
+    "marker": "tag_1001",
+    "contents": [
+      {
+        "uuid": "bouc",
+        "scale": 0.75
+      }
+    ]
+  },
+  {
+    "uuid": "channel_image2",
+    "name": "Channel 2",
+    "marker": "marker_1",
+    "contents": [
+      {
+        "uuid": "banana",
+        "scale": 0.3
+      }
+    ]
+  }
+]

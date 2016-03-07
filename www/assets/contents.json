@@ -1,0 +1,53 @@
+[
+  {
+    "uuid": "box",
+    "name": "Red box",
+    "object": "mesh_cube"
+  },
+  {
+    "uuid": "sphere",
+    "name": "Blue sphere",
+    "object": "mesh_sphere"
+  },
+  {
+    "uuid": "plane",
+    "name": "Yellow plane",
+    "object": "mesh_plane"
+  },
+  {
+    "uuid": "lehublot",
+    "name": "Le Hublot",
+    "object": "mesh_lehublot"
+  },
+  {
+    "uuid": "frozen",
+    "name": "Frozen",
+    "object": "mesh_frozen"
+  },
+  {
+    "uuid": "banana",
+    "name": "Banana",
+    "object": "mesh_banana"
+  },
+  {
+    "uuid": "bouc",
+    "name": "Bouc",
+    "object": "object_bouc"
+  },
+  {
+    "uuid": "cantine",
+    "object": "object_cantine"
+  },
+  {
+    "uuid": "cantine2",
+    "object": "object_cantine2"
+  },
+  {
+    "uuid": "hub",
+    "object": "mesh_hub"
+  },
+  {
+    "uuid": "arcciel",
+    "object": "mesh_arcciel"
+  }
+]
