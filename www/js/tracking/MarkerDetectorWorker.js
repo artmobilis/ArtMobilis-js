@@ -1,15 +1,17 @@
 window = self;
 
+var LIB_PATH = '../../lib/';
+
 // aruco
-importScripts('../lib/aruco/cv.js');
-importScripts('../lib/aruco/aruco.js');
-importScripts('../lib/aruco/svd.js');
-importScripts('../lib/aruco/posit1.js');
+importScripts(LIB_PATH + 'aruco/cv.js');
+importScripts(LIB_PATH + 'aruco/aruco.js');
+importScripts(LIB_PATH + 'aruco/svd.js');
+importScripts(LIB_PATH + 'aruco/posit1.js');
 
 // jsfeat
-importScripts('../lib/jsfeat/jsfeat.js');
+importScripts(LIB_PATH + 'jsfeat/jsfeat.js');
 
-importScripts('../lib/ArtMobilib/artmobilib.js');
+importScripts(LIB_PATH + 'ArtMobilib/artmobilib.js');
 
 
 
@@ -61,8 +63,8 @@ function DetectTags(image) {
 
 
 function OnNewImage(data) {
-
   var tags;
+  
   if (_tag_detector_enabled)
     tags = DetectTags(data.image);
   else

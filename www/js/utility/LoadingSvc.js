@@ -1,4 +1,4 @@
-angular.module('starter')
+angular.module('utility')
 
 .service('LoadingSvc', function() {
   var that = this;

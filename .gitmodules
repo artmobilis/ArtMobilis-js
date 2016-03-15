@@ -1,0 +1,3 @@
+[submodule "www/lib/ArtMobilib"]
+	path = www/lib/ArtMobilib
+	url = https://github.com/calemany/ArtMobilib.git

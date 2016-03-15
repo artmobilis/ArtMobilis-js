@@ -1,31 +1,4 @@
-/*********************
-
-GeolocationSvc
-
-
-
-Methods
-
-Start()
-
-Stop()
-
-GetPosition()
-
-IsLoading()
-
-IsWatching()
-
-
-Dependency
-
-CoordinatesConverterSvc
-
-
-********************/
-
-
-angular.module('starter')
+angular.module('journey')
 
 .service('GeolocationSvc', function(CoordinatesConverterSvc) {
 
@@ -43,6 +16,17 @@ angular.module('starter')
   var _on_watch;
   var _on_error;
 
+
+  function OnNewPosition() {
+    var event = new CustomEvent('device_move_xy', { detail: { x: _position.x, y: _position.y } });
+    document.dispatchEvent(event);
+  }
+
+  function SetCoords(latitude, longitude) {
+    _position = CoordinatesConverterSvc.ConvertLocalCoordinates(latitude, longitude);
+    OnNewPosition();
+  }
+
   function OnSuccess(pos) {
     _retry_nbr = 0;
     _watching = true;
@@ -51,10 +35,7 @@ angular.module('starter')
       _on_watch();
       _on_watch = undefined;
     }
-    _position = CoordinatesConverterSvc.ConvertLocalCoordinates(pos.coords.latitude, pos.coords.longitude);
-
-    var event = new CustomEvent('device_move_xy', { detail: { x: _position.x, y: _position.y } });
-    document.dispatchEvent(event);
+    SetCoords(pos.coords.latitude, pos.coords.longitude)
   }
 
   function OnError(e) {
@@ -110,5 +91,16 @@ angular.module('starter')
   this.IsWatching = function() {
     return _watching;
   };
+
+  this.SimulateNewCoords = function(latitude, longitude) {
+    SetCoords(latitude, longitude);
+  };
+
+  this.SimulateNewPosition = function(x, y) {
+    _position.x = x;
+    _position.y = y;
+    OnNewPosition();
+  };
+
 
 })

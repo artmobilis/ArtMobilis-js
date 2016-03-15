@@ -1,4 +1,4 @@
-angular.module('starter')
+angular.module('journey')
 
 .service('JourneyManagerSvc', function(CoordinatesConverterSvc, GeolocationSvc, DataManagerSvc) {
   var that = this;

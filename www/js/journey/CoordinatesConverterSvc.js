@@ -1,4 +1,4 @@
-angular.module('starter')
+angular.module('journey')
 
 .service('CoordinatesConverterSvc', function() {
   var _converter = new AM.GeographicCoordinatesConverter();
