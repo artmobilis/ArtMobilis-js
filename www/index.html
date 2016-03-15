@@ -28,29 +28,39 @@
 
 
   <script src="lib/ArtMobilib/artmobilib.js"></script>
-  
-  <script src="js/TrackingDataManager.js"></script>
-  <script src="js/Journey.js"></script>
 
   <!-- your app's js -->
   <script src="js/app.js"></script>
+  <script src="js/app/LoadingCtrl.js"></script>
+  <script src="js/app/TrackingViewCtrl.js"></script>
+  <script src="js/app/AppCtrl.js"></script>
+  <script src="js/app/MainMenuCtrl.js"></script>
 
-  <script src="js/services/CameraSvc.js"></script>
-  <script src="js/services/CoordinatesConverterSvc.js"></script>
-  <script src="js/services/DataManagerSvc.js"></script>
-  <script src="js/services/GeolocationSvc.js"></script>
-  <script src="js/services/JourneyManagerSvc.js"></script>
-  <script src="js/services/LoadingSvc.js"></script>
-  <script src="js/services/MarkerDetectorSvc.js"></script>
-  <script src="js/services/JourneySceneSvc.js"></script>
+  <!-- data module -->
+  <script src="js/data/dataModule.js"></script>
+  <script src="js/data/ChannelsManager.js"></script>
+  <script src="js/data/Journey.js"></script>
+  <script src="js/data/DataManagerSvc.js"></script>
 
-  <script src="js/directives/trackingView.js"></script>
-  <script src="js/directives/progressBar.js"></script>
+  <!-- journey module -->
+  <script src="js/journey/journeyModule.js"></script>
+  <script src="js/journey/CoordinatesConverterSvc.js"></script>
+  <script src="js/journey/GeolocationSvc.js"></script>
+  <script src="js/journey/JourneyManagerSvc.js"></script>
+  <script src="js/journey/JourneySceneSvc.js"></script>
+  <script src="js/journey/trackingView.js"></script>
+  
+  <!-- tracking module -->
+  <script src="js/tracking/trackingModule.js"></script>
+  <script src="js/tracking/MarkerDetectorSvc.js"></script>
 
-  <script src="js/controllers/LoadingCtrl.js"></script>
-  <script src="js/controllers/TrackingViewCtrl.js"></script>
-  <script src="js/controllers/AppCtrl.js"></script>
-  <script src="js/controllers/MainMenuCtrl.js"></script>
+  <!-- utility module -->
+  <script src="js/utility/utilityModule.js"></script>
+  <script src="js/utility/CameraSvc.js"></script>
+  <script src="js/utility/LoadingSvc.js"></script>
+  <script src="js/utility/progressBar.js"></script>
+
+
 
 </head>
 <body ng-app="starter" style="height: 100%;" class="background_map">

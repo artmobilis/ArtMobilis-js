@@ -1,12 +1,14 @@
-angular.module('starter')
+angular.module('data')
 
-.service('DataManagerSvc', [function() {
+.service('DataManagerSvc', ['Journey', 'ChannelsManager', function(Journey, ChannelsManager) {
   var that = this;
 
   var _contents_loader = new AM.JsonLoader();
   var _markers_loader = new AM.JsonLoader();
   var _channels_loader = new AM.JsonLoader();
   var _loading_manager = new AM.LoadingManager();
+
+  var _journey = new Journey();
 
   var _presets_loaded = false;
 
@@ -17,7 +19,7 @@ angular.module('starter')
 
 
   this.origin = './assets';
-  this.tracking_data_manager = new TrackingDataManager();
+  this.tracking_data_manager = new ChannelsManager();
 
 
   this.LoadMarkers = function(url) {
@@ -76,6 +78,21 @@ angular.module('starter')
       that.LoadMarkers('markers.json');
       that.LoadContents('contents.json');
       that.LoadChannels('channels.json');
+    }
+  };
+
+  this.LoadJourney = function(url, on_load, on_error) {
+    if (!that.IsLoading()) {
+      _loading_manager.Start();
+
+      var OnLoad = function() {
+        return function() {
+          _loading_manager.End();
+          on_load();
+        };
+      }(on_load);
+
+      _journey.Load(url, OnLoad, on_error);
     }
   };
 

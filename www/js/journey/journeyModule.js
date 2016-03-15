@@ -1,0 +1,1 @@
+angular.module('journey', ['ionic', 'data', 'tracking', 'utility'])

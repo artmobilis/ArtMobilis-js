@@ -1,9 +1,7 @@
-angular.module('starter')
+angular.module('journey')
 
-.directive('trackingView', ['$ionicPlatform', '$state', 'DataManagerSvc',
-  'CameraSvc', 'LoadingSvc', 'MarkerDetectorSvc', 'JourneySceneSvc',
-  function($ionicPlatform, $state,
-    DataManagerSvc, CameraSvc, LoadingSvc, MarkerDetectorSvc, JourneySceneSvc) {
+.directive('trackingView', ['CameraSvc', 'JourneySceneSvc',
+  function(CameraSvc, JourneySceneSvc) {
     return {
       restrict: 'E',
       template: '<div/>',
@@ -40,7 +38,6 @@ angular.module('starter')
 
         document.body.appendChild(_camera_video_element);
         _camera_video_element_appended = true;
-
 
 
         scope.$on('$destroy', function() {
