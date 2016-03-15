@@ -10,7 +10,7 @@ var uglify = require("gulp-uglify");
 
 var paths = {
   sass: ['./scss/**/*.scss'],
-  artmobilib: ['../ArtMobilib/src/**/*.js']
+  artmobilib_src: ['../ArtMobilib/src/**/*.js']
 };
 
 gulp.task('default', ['sass', 'minify-artmobilib']);
@@ -29,14 +29,19 @@ gulp.task('sass', function(done) {
 });
 
 gulp.task('minify-artmobilib', function () {
-    gulp.src(paths.artmobilib)
+    gulp.src(paths.artmobilib_src)
     .pipe(concat('artmobilib.js'))
-    .pipe(gulp.dest('./www/lib/ArtMobilib'));
+    .pipe(gulp.dest('../ArtMobilib/build/'))
+    .pipe(gulp.dest('./www/lib/ArtMobilib/'))
+    .pipe(uglify())
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(gulp.dest('../ArtMobilib/build/'))
+    .pipe(gulp.dest('./www/lib/ArtMobilib/'));
 });
 
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
-  gulp.watch(paths.artmobilib, ['minify-artmobilib']);
+  gulp.watch(paths.artmobilib_src, ['minify-artmobilib']);
 });
 
 gulp.task('install', ['git-check'], function() {
