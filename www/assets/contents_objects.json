@@ -5,88 +5,84 @@
     "video_path": "videos",
     "model_path": "models"
   },
-  "object": {
-    "type": "Object3D",
-    "uuid": "root",
-    "children": [
-      {
-        "type": "Mesh",
-        "uuid": "mesh_cube",
-        "geometry": "geo_box",
-        "material": "mat_phong_red"
-      },
-      {
-        "type": "Mesh",
-        "uuid": "mesh_sphere",
-        "geometry": "geo_sphere",
-        "material": "mat_phong_blue"
-      },
-      {
-        "type": "Mesh",
-        "uuid": "mesh_plane",
-        "geometry": "geo_plane",
-        "material": "mat_phong_yellow"
-      },
-      {
-        "type": "Mesh",
-        "uuid": "mesh_lehublot",
-        "geometry": "geo_plane",
-        "material": "mat_lehublot"
-      },
-      {
-        "type": "Mesh",
-        "uuid": "mesh_frozen",
-        "geometry": "geo_plane",
-        "material": "mat_frozen"
-      },
-      {
-        "type": "Mesh",
-        "uuid": "mesh_banana",
-        "geometry": "geo_plane",
-        "material": "mat_banana"
-      },
-      {
-        "type": "Mesh",
-        "uuid": "mesh_landmark",
-        "geometry": "geo_box",
-        "material": "mat_phong_red",
-        "scale": [
-          5,
-          20,
-          5
-        ]
-      },
-      {
-        "type": "Mesh",
-        "uuid": "object_bouc",
-        "geometry": "geo_plane",
-        "material": "mat_lehublot",
-        "children": [
-          {
-            "type": "Sound",
-            "url": "./assets/sounds/bouc.mp3"
-          }
-        ]
-      },
-      {
-        "type": "Mesh",
-        "uuid": "mesh_polyhedron",
-        "geometry": "geo_polyhedron",
-        "material": "mat_phong_blue"
-      },
-      {
-        "type": "ImagePlane",
-        "uuid": "mesh_hub",
-        "url": "lehublot.jpg"
-      },
-      {
-        "type": "Mesh",
-        "uuid": "mesh_arcciel",
-        "geometry": "geo_plane",
-        "material": "mat_arcciel"
-      }
-    ]
-  },
+  "objects": [
+    {
+      "type": "Mesh",
+      "uuid": "mesh_cube",
+      "geometry": "geo_box",
+      "material": "mat_phong_red"
+    },
+    {
+      "type": "Mesh",
+      "uuid": "mesh_sphere",
+      "geometry": "geo_sphere",
+      "material": "mat_phong_blue"
+    },
+    {
+      "type": "Mesh",
+      "uuid": "mesh_plane",
+      "geometry": "geo_plane",
+      "material": "mat_phong_yellow"
+    },
+    {
+      "type": "Mesh",
+      "uuid": "mesh_lehublot",
+      "geometry": "geo_plane",
+      "material": "mat_lehublot"
+    },
+    {
+      "type": "Mesh",
+      "uuid": "mesh_frozen",
+      "geometry": "geo_plane",
+      "material": "mat_frozen"
+    },
+    {
+      "type": "Mesh",
+      "uuid": "mesh_banana",
+      "geometry": "geo_plane",
+      "material": "mat_banana"
+    },
+    {
+      "type": "Mesh",
+      "uuid": "mesh_landmark",
+      "geometry": "geo_box",
+      "material": "mat_phong_red",
+      "scale": [
+        5,
+        20,
+        5
+      ]
+    },
+    {
+      "type": "Mesh",
+      "uuid": "object_bouc",
+      "geometry": "geo_plane",
+      "material": "mat_lehublot",
+      "children": [
+        {
+          "type": "Sound",
+          "url": "./assets/sounds/bouc.mp3"
+        }
+      ]
+    },
+    {
+      "type": "Mesh",
+      "uuid": "mesh_polyhedron",
+      "geometry": "geo_polyhedron",
+      "material": "mat_phong_blue"
+    },
+    {
+      "type": "ImagePlane",
+      "uuid": "mesh_hub",
+      "url": "lehublot.jpg"
+    },
+    {
+      "type": "Mesh",
+      "uuid": "mesh_arcciel",
+      "geometry": "geo_plane",
+      "material": "mat_arcciel"
+    }
+  ],
   "geometries": [
     {
       "type": "BoxGeometry",

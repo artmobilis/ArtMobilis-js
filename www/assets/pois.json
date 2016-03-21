@@ -1,0 +1,70 @@
+[
+  {
+    "uuid": "poi_1",
+    "name": "Bureau",
+    "latitude": 43.714214,
+    "longitude": 7.288949,
+    "radius": 1000,
+    "landmark": {},
+    "channels": [
+      {
+        "uuid": "channel_tag",
+        "object": "mesh_polyhedron",
+        "longitude": 43.714219,
+        "latitude": 7.289030,
+        "altitude": 6,
+        "scale": 2
+      },
+      {
+        "uuid": "channel_tag3",
+        "object": "mesh_polyhedron",
+        "longitude": 43.714219,
+        "latitude": 7.289030,
+        "altitude": 6,
+        "scale": 2
+      },
+      {
+        "uuid": "channel_tag4",
+        "object": "mesh_polyhedron",
+        "longitude": 43.714219,
+        "latitude": 7.289030,
+        "altitude": 6,
+        "scale": 2
+      },
+      {
+        "uuid": "channel_image",
+        "object": "mesh_polyhedron",
+        "longitude": 43.714238,
+        "latitude": 7.288872,
+        "altitude": 6,
+        "scale": 2
+      }
+    ]
+  },
+  {
+    "uuid": "poi_2",
+    "name": "Reunion",
+    "latitude": 43.713969,
+    "longitude": 7.288873,
+    "radius": 10,
+    "landmark": {},
+    "channels": [
+      {
+        "uuid": "channel_tag4",
+        "object": "mesh_polyhedron",
+        "longitude": 43.714036,
+        "latitude": 7.288991,
+        "altitude": 4,
+        "scale": 2
+      },
+      {
+        "uuid": "channel_image2",
+        "object": "mesh_polyhedron",
+        "longitude": 43.714061,
+        "latitude": 7.288774,
+        "altitude": 4,
+        "scale": 2
+      }
+    ]
+  }
+]
