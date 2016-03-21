@@ -23,7 +23,8 @@ var JourneySceneSvc = (function() {
 
 
   return function($ionicPlatform, JourneyManagerSvc, DataManagerSvc,
-    MarkerDetectorSvc, CameraSvc, LoadingSvc, CoordinatesConverterSvc, Journey) {
+    MarkerDetectorSvc, CameraSvc, LoadingSvc, objectFactory,
+    CoordinatesConverterSvc, Journey) {
     var that = this;
 
     var _image_loader = new AM.ImageLoader();
@@ -81,17 +82,20 @@ var JourneySceneSvc = (function() {
       if (!poi)
         return;
 
-      DataManagerSvc.OnLoad(function() {
+      DataManagerSvc.GetLoadPromise().then(function() {
+        var data_journey = DataManagerSvc.GetData();
+        var channels = data_journey.channels;
+        var markers = data_journey.markers;
 
         for (poi_channel of poi.channels) {
           var channel_uuid = poi_channel.uuid;
-          var channel = DataManagerSvc.tracking_data_manager.GetChannel(channel_uuid);
-          var marker = DataManagerSvc.tracking_data_manager.GetMarker(channel.marker);
+          var channel = channels[channel_uuid];
+          var marker = markers[channel.marker];
 
-          if (marker.is_image)
-            MarkerDetectorSvc.AddMarker(marker.img, channel_uuid);
+          if (marker.type === 'img')
+            MarkerDetectorSvc.AddMarker(marker.url, channel_uuid);
 
-          var object = DataManagerSvc.tracking_data_manager.BuildChannelContents(channel_uuid);
+          var object = objectFactory.BuildChannelContents(channel_uuid, DataManagerSvc.GetData());
 
           (function(channel_uuid) {
             _tracked_obj_manager.Add(object, channel_uuid, function(o) {
@@ -173,37 +177,14 @@ var JourneySceneSvc = (function() {
     }
 
     function LoadData() {
-
       LoadingSvc.Start();
       _loading_manager.Start();
-      DataManagerSvc.LoadChannelsPresets();
-      DataManagerSvc.OnLoad(function() {
+      DataManagerSvc.LoadPresets();
+      return DataManagerSvc.GetLoadPromise().then(function() {
+        AddPOILandmarks();
         LoadingSvc.End();
         _loading_manager.End();
-      });
-
-      if (!_journey) {
-        var filename = './assets/journey.json';
-
-        LoadingSvc.Start();
-        _loading_manager.Start();
-
-        _journey = new Journey();
-        _journey.Load(filename, function() {
-
-          JourneyManagerSvc.SetJourney(_journey);
-
-          AddPOILandmarks();
-
-          LoadingSvc.End();
-          _loading_manager.End();
-
-        }, function(e) {
-          console.warn('JourneySceneSvc: loading failed: ' + e);
-          LoadingSvc.End();
-          _loading_manager.End();
-        });
-      }
+      }, console.warn);
     }
 
     function LoadNavigationScene() {
@@ -220,7 +201,7 @@ var JourneySceneSvc = (function() {
       LoadingSvc.Start();
       _loading_manager.Start();
 
-      DataManagerSvc.OnLoad(function() {
+      DataManagerSvc.GetLoadPromise().then(function() {
         _poi_landmarks = JourneyManagerSvc.GetPOILandmarks();
         _scene.AddObject(_poi_landmarks);
         _loading_manager.End();
@@ -319,12 +300,16 @@ var JourneySceneSvc = (function() {
       var tags = MarkerDetectorSvc.GetTags();
       var marker_corners = MarkerDetectorSvc.GetMarker();
 
+      var data_journey = DataManagerSvc.GetData();
+      var channels = data_journey.channels;
+      var markers = data_journey.markers;
+
       for (tag of tags) {
         console.log('tag detected: ' + tag.id);
         for (poi_channel of JourneyManagerSvc.GetCurrentPOI().channels) {
-          var channel = DataManagerSvc.tracking_data_manager.GetChannel(poi_channel.uuid);
-          var marker = DataManagerSvc.tracking_data_manager.GetMarker(channel.marker);
-          if (marker.is_tag && marker.tag_id === tag.id) {
+          var channel = channels[poi_channel.uuid];
+          var marker = markers[channel.marker];
+          if (marker.type === 'tag' && marker.tag_id === tag.id) {
             MarkerDetectorSvc.SetTransform(tag);
             _tracked_obj_manager.TrackCompose(poi_channel.uuid,
               MarkerDetectorSvc.position,
@@ -347,7 +332,9 @@ var JourneySceneSvc = (function() {
     }
 
     function UpdateBubbles() {
-      var pois = JourneyManagerSvc.GetPOIs();
+      var data_journey = DataManagerSvc.GetData();
+      var journey = data_journey.journey;
+      var pois = data_journey.pois;
 
       var poi_position = new THREE.Vector3();
 
@@ -355,7 +342,10 @@ var JourneySceneSvc = (function() {
 
       cam_pos.setFromMatrixPosition(_scene.GetCamera().matrixWorld);
 
-      for (poi of pois) {
+      for (poi_id in journey.pois) {
+        var poi = pois[poi_id];
+        if (!poi) continue;
+
         poi_position.x = poi.position.x;
         poi_position.z = poi.position.y;
         var position = AMTHREE.WorldToCanvasPosition(poi_position, _scene.GetCamera(), _canvas2d);
@@ -420,5 +410,6 @@ var JourneySceneSvc = (function() {
 angular.module('journey')
 
 .service('JourneySceneSvc', ['$ionicPlatform', 'JourneyManagerSvc', 'DataManagerSvc',
-  'MarkerDetectorSvc', 'CameraSvc', 'LoadingSvc', 'CoordinatesConverterSvc', 'Journey',
+  'MarkerDetectorSvc', 'CameraSvc', 'LoadingSvc', 'objectFactory',
+  'CoordinatesConverterSvc', 'Journey',
   JourneySceneSvc]);
