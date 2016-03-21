@@ -1,99 +1,73 @@
 angular.module('data')
 
-.service('DataManagerSvc', ['Journey', 'ChannelsManager', function(Journey, ChannelsManager) {
-  var that = this;
-
-  var _contents_loader = new AM.JsonLoader();
-  var _markers_loader = new AM.JsonLoader();
-  var _channels_loader = new AM.JsonLoader();
-  var _loading_manager = new AM.LoadingManager();
-
-  var _journey = new Journey();
-
-  var _presets_loaded = false;
+.factory('DataManagerSvc', ['dataJourneyFactory', 'PATHS', function(dataJourneyFactory, PATHS) {
 
 
-  function GetPath(url) {
-    return that.origin + '/' + url;
+  function DataManagerSvc() {
+
+    var _data_journey = dataJourneyFactory.Create();
+    var _load_promise = Promise.resolve();
+
+    function LoadData(url, type) {
+      _load_promise = _load_promise.then(function() {
+
+        return dataJourneyFactory.LoadData(url, type, _data_journey)
+        .then(function(data_journey) {
+          _data_journey = data_journey;
+        });
+
+      });
+
+      return _load_promise;
+    }
+
+    function ParseData(json, type) {
+      _load_promise = _load_promise.then(function() {
+
+        return dataJourneyFactory.ParseData(json, type, _data_journey)
+        .then(function(data_journey) {
+          _data_journey = data_journey;
+        });
+
+      })
+
+      return _load_promise;
+    }
+
+    function Clear() {
+      _data_journey = dataJourneyFactory.Create();
+    }
+
+    function GetData() {
+      return _data_journey;
+    }
+
+    function LoadPresets() {
+      LoadData(PATHS.JOURNEY, 'journey');
+      LoadData(PATHS.POIS, 'poi_array');
+      LoadData(PATHS.MARKERS, 'marker_array');
+      LoadData(PATHS.CONTENTS, 'content_array');
+      LoadData(PATHS.OBJECTS, 'object_array');
+      LoadData(PATHS.CHANNELS, 'channel_array');
+
+      return _load_promise;
+    }
+
+    function GetLoadPromise() {
+      return _load_promise;
+    }
+
+    this.LoadData = LoadData;
+    this.ParseData = ParseData;
+    this.Clear = Clear;
+    this.GetData = GetData;
+    this.LoadPresets = LoadPresets;
+    this.GetLoadPromise = GetLoadPromise;
+
   }
 
 
-  this.origin = './assets';
-  this.tracking_data_manager = new ChannelsManager();
+  return new DataManagerSvc();
 
-
-  this.LoadMarkers = function(url) {
-    _loading_manager.Start();
-    _markers_loader.Load(GetPath(url), function() {
-      that.tracking_data_manager.ParseMarkers(_markers_loader.json);
-      _loading_manager.End();
-    }, function(error) {
-      console.log('DataManagerSvc: failed to load markers: ' + error);
-      _loading_manager.End();
-    });
-  };
-
-  this.LoadContents = function(url) {
-    _loading_manager.Start();
-    _contents_loader.Load(GetPath(url), function() {
-      that.tracking_data_manager.ParseContents(_contents_loader.json);
-      _loading_manager.End();
-    }, function(error) {
-      console.log('DataManagerSvc: failed to load contents: ' + error);
-      _loading_manager.End();
-    });
-  };
-
-  this.LoadChannels = function(url) {
-    _loading_manager.Start();
-    _channels_loader.Load(GetPath(url), function() {
-      that.tracking_data_manager.ParseChannels(_channels_loader.json);
-      _loading_manager.End();
-    }, function(error) {
-      console.log('DataManagerSvc: failed to load channels: ' + error);
-      _loading_manager.End();
-    });
-  };
-
-  this.LoadContentsAssets = function(url) {
-    _loading_manager.Start();
-    this.tracking_data_manager.LoadContentsAssets(GetPath(url));
-    this.tracking_data_manager.OnLoadContentsAssets(function() {
-      _loading_manager.End();
-    });
-  };
-
-  this.OnLoad = function(on_load) {
-    _loading_manager.OnEnd(on_load);
-  };
-
-  this.IsLoading = function() {
-    return _loading_manager.IsLoading();
-  };
-
-  this.LoadChannelsPresets = function() {
-    if (!_presets_loaded) {
-      _presets_loaded = true;
-      that.LoadContentsAssets('contents_objects.json');
-      that.LoadMarkers('markers.json');
-      that.LoadContents('contents.json');
-      that.LoadChannels('channels.json');
-    }
-  };
-
-  this.LoadJourney = function(url, on_load, on_error) {
-    if (!that.IsLoading()) {
-      _loading_manager.Start();
-
-      var OnLoad = function() {
-        return function() {
-          _loading_manager.End();
-          on_load();
-        };
-      }(on_load);
-
-      _journey.Load(url, OnLoad, on_error);
-    }
-  };
 
 }])

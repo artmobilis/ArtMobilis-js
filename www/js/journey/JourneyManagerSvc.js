@@ -1,13 +1,13 @@
 angular.module('journey')
 
-.service('JourneyManagerSvc', function(CoordinatesConverterSvc, GeolocationSvc, DataManagerSvc) {
+.service('JourneyManagerSvc', ['CoordinatesConverterSvc', 'GeolocationSvc', 'DataManagerSvc',
+  function(CoordinatesConverterSvc, GeolocationSvc, DataManagerSvc) {
   var that = this;
 
   this.MODE_NAVIGATION = 0;
   this.MODE_POI = 1;
   this.MODE_NAVIGATION_FORCED = 2;
 
-  var _journey;
   var _position = { x: 0, y: 0 };
 
   var _current_poi;
@@ -44,9 +44,11 @@ angular.module('journey')
     return (d > d_max);
   }
 
-  function FindEnteringPOI() {
-    var pois = _journey.GetPOIs();
-    for (poi of pois) {
+  function FindEnteringPOI(journey, pois) {
+    for (poi_id of journey.pois) {
+      var poi = pois[poi_id];
+      if (!poi) continue;
+
       if (IsEnteringPOI(poi)) {
         return poi;
       }
@@ -72,13 +74,14 @@ angular.module('journey')
   }
 
   function SetMode() {
-    if (!_journey)
-      return;
+    var data_journey = DataManagerSvc.GetData();
+    var pois = data_journey.pois;
+    var journey = data_journey.journey;
 
     switch (_mode) {
 
       case that.MODE_NAVIGATION:
-      var poi = FindEnteringPOI();
+      var poi = FindEnteringPOI(journey, pois);
       if (poi)
         GoToPOI(poi);
       break;
@@ -101,11 +104,13 @@ angular.module('journey')
     SetMode();
   }
 
-  this.SetJourney = function(journey) {
-    _journey = journey;
+  this.Reset = function() {
     _mode = that.MODE_NAVIGATION;
+  };
 
-    for (poi of _journey.GetPOIs()) {
+  this.SetPoisPosition = function(pois) {
+    for (var i = 0, c = pois.length; i < c; ++i) {
+      var poi = pois[i];
       poi.position = CoordinatesConverterSvc.ConvertLocalCoordinates(poi.latitude, poi.longitude);
     }
   };
@@ -120,13 +125,6 @@ angular.module('journey')
     }
     return undefined;
   };
-
-  this.GetPOIs = function() {
-    if (_journey)
-      return _journey.GetPOIs();
-    else
-      return undefined;
-  }
 
   this.Start = function() {
     if (!_running) {
@@ -153,9 +151,14 @@ angular.module('journey')
   this.GetPOILandmarks = function() {
     var object = new THREE.Object3D();
 
-    for (poi of _journey.GetPOIs()) {
+    var pois = DataManagerSvc.GetData().pois;
+    var objects = DataManagerSvc.GetData().objects;
+
+    for (poi_id in pois) {
+      var poi = pois[poi_id];
+
       if (poi.landmark) {
-        var landmark_obj = DataManagerSvc.tracking_data_manager.GetObject(poi.landmark.object);
+        var landmark_obj = objects[poi.landmark.object];
         if (!landmark_obj)
           continue;
 
@@ -180,9 +183,10 @@ angular.module('journey')
     var poi = _current_poi;
 
     var landmarks = new THREE.Object3D();
+    var objects = DataManagerSvc.GetData().objects;
 
     for (channel of poi.channels) {
-      var obj = DataManagerSvc.tracking_data_manager.GetObject(channel.object);
+      var obj = objects[channel.object];
       if (typeof obj !== 'undefined') {
         obj = obj.clone();
         var position = CoordinatesConverterSvc.ConvertLocalCoordinates(channel.longitude, channel.latitude);
@@ -211,4 +215,4 @@ angular.module('journey')
   };
 
   
-})
+}])

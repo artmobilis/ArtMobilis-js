@@ -17,8 +17,10 @@ angular.module('data')
 
 
     this.Load = function(url, on_load, on_error) {
-      if (_loading)
+      if (_loading) {
+        on_error('loading');
         return;
+      }
 
       _loading = true;
       var loader = new AM.JsonLoader();
