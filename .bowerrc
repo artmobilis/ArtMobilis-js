@@ -1,3 +1,10 @@
 {
-  "directory": "www/lib"
+  "directory": "www/lib",
+  "ignoredDependencies": [
+    "ionic",
+    "angular",
+    "angular-animate",
+    "angular-sanitize",
+    "angular-ui-router"
+  ]
 }

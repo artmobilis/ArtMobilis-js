@@ -4,7 +4,8 @@
   "gulpStartupTasks": [
     "sass",
     "watch",
-    "minify-artmobilib"
+    "minify-artmobilib",
+    "copy-artmobilis-js-modules"
   ],
   "watchPatterns": [
     "www/**/*",
