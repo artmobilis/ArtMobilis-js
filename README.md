@@ -14,6 +14,10 @@
 - ```npm install```
 - ```bower install```
 
+### 4 - Ajouter les modules
+- telecharger les modules [ArtMobilis-ng-modules](https://github.com/artmobilis/ArtMobilis-js-ngmodules)
+- placer le contenu du dossier "modules" dans "www/js"
+
 ### 4 - Lancer le projet Ionic sur pc
 ```ionic serve```
 
