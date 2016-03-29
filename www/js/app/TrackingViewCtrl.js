@@ -11,7 +11,7 @@ angular.module('starter')
 
   var _destroyed = false;
 
-  JourneySceneSvc.Start();
+  JourneySceneSvc.Start(true);
 
   if (LoadingSvc.IsLoading()) {
     $state.go('loading', { next_state: 'tracking' } );
