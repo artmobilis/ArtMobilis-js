@@ -5,7 +5,7 @@
     "sass",
     "watch",
     "minify-artmobilib",
-    "copy-artmobilis-js-ngmodules"
+    "copy-ngmodules"
   ],
   "watchPatterns": [
     "www/**/*",
