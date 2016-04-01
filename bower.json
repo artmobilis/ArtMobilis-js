@@ -8,6 +8,6 @@
     "libgif-js": "https://github.com/buzzfeed/libgif-js.git#8c044e1",
     "three.js": "https://github.com/mrdoob/three.js.git#r73",
     "ArtMobilib": "https://github.com/artmobilis/ArtMobilib-js.git",
-    "ArtMobilis-js-ngmodules": "https://github.com/ssm2017/ArtMobilis-js-ngmodules.git"
+    "ArtMobilis-js-ngmodules": "https://github.com/artmobilis/ArtMobilis-js-ngmodules.git"
   }
 }
