@@ -15,7 +15,7 @@ var paths = {
   artmobilis_js_ngmodules_src: ['../ArtMobilis-js-ngmodules/modules/**/*']
 };
 
-gulp.task('default', ['sass', 'lint-artmobilib', 'minify-artmobilib', 'copy-artmobilis-js-modules']);
+gulp.task('default', ['sass', 'lint-artmobilib', 'minify-artmobilib', 'copy-artmobilis-js-ngmodules']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
@@ -39,6 +39,15 @@ gulp.task('lint-artmobilib', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
+gulp.task('lint-ngmodules', function() {
+  return gulp.src(paths.artmobilis_js_ngmodules_src)
+    .pipe(jshint())
+    .on('error', function(err) {
+      console.log(err.toString());
+    })
+    .pipe(jshint.reporter('jshint-stylish'));
+});
+
 gulp.task('minify-artmobilib', ['lint-artmobilib'], function () {
     gulp.src(paths.artmobilib_src)
     .pipe(concat('artmobilib.js'))
@@ -50,9 +59,9 @@ gulp.task('minify-artmobilib', ['lint-artmobilib'], function () {
     .pipe(gulp.dest('./www/lib/ArtMobilib/build/'));
 });
 
-gulp.task('copy-artmobilis-js-modules', function() {
+gulp.task('copy-artmobilis-js-ngmodules', ['lint-ngmodules'], function() {
     gulp.src(paths.artmobilis_js_ngmodules_src)
-    .pipe(gulp.dest('./www/js/'));
+    .pipe(gulp.dest('./lib/ArtMobilis-js-ngmodules/modules/'));
 });
 
 gulp.task('watch', function() {

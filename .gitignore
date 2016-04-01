@@ -4,13 +4,7 @@ www/lib/js-aruco
 www/lib/jsfeat
 www/lib/libgif-js
 www/lib/three.js
-
-# Ignore ArtMobilis-js-ngmodules
-www/js/data
-www/js/dataLoading
-www/js/journey
-www/js/tracking
-www/js/utility
+www/lib/ArtMobilis-js-ngmodules
 
 # nodejs/angular/ionic
 node_modules/
