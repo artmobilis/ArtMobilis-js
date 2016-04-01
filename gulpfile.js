@@ -61,7 +61,7 @@ gulp.task('minify-artmobilib', ['lint-artmobilib'], function () {
 
 gulp.task('copy-artmobilis-js-ngmodules', ['lint-ngmodules'], function() {
     gulp.src(paths.artmobilis_js_ngmodules_src)
-    .pipe(gulp.dest('./lib/ArtMobilis-js-ngmodules/modules/'));
+    .pipe(gulp.dest('./www/lib/ArtMobilis-js-ngmodules/modules/'));
 });
 
 gulp.task('watch', function() {
