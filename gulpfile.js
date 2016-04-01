@@ -67,7 +67,7 @@ gulp.task('copy-artmobilis-js-ngmodules', ['lint-ngmodules'], function() {
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
   gulp.watch(paths.artmobilib_src, ['minify-artmobilib']);
-  gulp.watch(paths.artmobilis_js_ngmodules_src, ['copy-artmobilis-js-modules']);
+  gulp.watch(paths.artmobilis_js_ngmodules_src, ['copy-artmobilis-js-ngmodules']);
 });
 
 gulp.task('install', ['git-check'], function() {
