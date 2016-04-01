@@ -1,12 +1,13 @@
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var bower = require('bower');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
+var gulp      = require('gulp');
+var gutil     = require('gulp-util');
+var bower     = require('bower');
+var concat    = require('gulp-concat');
+var sass      = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
-var rename = require('gulp-rename');
-var sh = require('shelljs');
-var uglify = require("gulp-uglify");
+var rename    = require('gulp-rename');
+var sh        = require('shelljs');
+var jshint    = require('gulp-jshint');
+var uglify    = require("gulp-uglify");
 
 var paths = {
   sass: ['./scss/**/*.scss'],
@@ -14,7 +15,7 @@ var paths = {
   artmobilis_js_ngmodules_src: ['../ArtMobilis-js-ngmodules/modules/**/*']
 };
 
-gulp.task('default', ['sass', 'minify-artmobilib', 'copy-artmobilis-js-modules']);
+gulp.task('default', ['sass', 'lint-artmobilib', 'minify-artmobilib', 'copy-ngmodules']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
@@ -29,7 +30,25 @@ gulp.task('sass', function(done) {
     .on('end', done);
 });
 
-gulp.task('minify-artmobilib', function () {
+gulp.task('lint-artmobilib', function() {
+  return gulp.src(paths.artmobilib_src)
+    .pipe(jshint())
+    .on('error', function(err) {
+      console.log(err.toString());
+    })
+    .pipe(jshint.reporter('jshint-stylish'));
+});
+
+gulp.task('lint-ngmodules', function() {
+  return gulp.src(paths.artmobilis_js_ngmodules_src)
+    .pipe(jshint())
+    .on('error', function(err) {
+      console.log(err.toString());
+    })
+    .pipe(jshint.reporter('jshint-stylish'));
+});
+
+gulp.task('minify-artmobilib', ['lint-artmobilib'], function () {
     gulp.src(paths.artmobilib_src)
     .pipe(concat('artmobilib.js'))
     .pipe(gulp.dest('../ArtMobilib-js/build/'))
@@ -40,15 +59,15 @@ gulp.task('minify-artmobilib', function () {
     .pipe(gulp.dest('./www/lib/ArtMobilib/build/'));
 });
 
-gulp.task('copy-artmobilis-js-modules', function() {
+gulp.task('copy-ngmodules', ['lint-ngmodules'], function() {
     gulp.src(paths.artmobilis_js_ngmodules_src)
-    .pipe(gulp.dest('./www/js/'));
+    .pipe(gulp.dest('./www/lib/ArtMobilis-js-ngmodules/modules/'));
 });
 
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
   gulp.watch(paths.artmobilib_src, ['minify-artmobilib']);
-  gulp.watch(paths.artmobilis_js_ngmodules_src, ['copy-artmobilis-js-modules']);
+  gulp.watch(paths.artmobilis_js_ngmodules_src, ['copy-ngmodules']);
 });
 
 gulp.task('install', ['git-check'], function() {
