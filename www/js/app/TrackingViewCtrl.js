@@ -1,7 +1,7 @@
 angular.module('starter')
 
 .controller('TrackingViewCtrl',
-  function($scope, $state, $timeout, JourneyManagerSvc, JourneySceneSvc, LoadingSvc) {
+  function($scope, $state, $timeout, JourneyManagerSvc, JourneySceneSvc, LoadingSvc, AssetsLoadingSvc) {
   $scope.footer_title = '';
 
   $scope.run = { value: false };
@@ -11,6 +11,7 @@ angular.module('starter')
 
   var _destroyed = false;
 
+  AssetsLoadingSvc.Load();
   JourneySceneSvc.Start(true);
 
   if (LoadingSvc.IsLoading()) {
