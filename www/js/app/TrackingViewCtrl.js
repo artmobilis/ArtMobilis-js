@@ -1,7 +1,14 @@
 angular.module('starter')
 
 .controller('TrackingViewCtrl',
-  function($scope, $state, $timeout, JourneyManagerSvc, JourneySceneSvc, LoadingSvc, AssetsLoadingSvc) {
+  function(
+    $scope,
+    $state,
+    $timeout,
+    JourneyManagerSvc,
+    JourneySceneSvc,
+    LoadingSvc,
+    AssetsLoadingSvc) {
   $scope.footer_title = '';
 
   $scope.run = { value: false };
