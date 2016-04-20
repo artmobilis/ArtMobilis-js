@@ -1,3 +1,6 @@
+#ignore assets
+www/assets
+
 # Ignore libs
 www/lib/ArtMobilib
 www/lib/js-aruco
