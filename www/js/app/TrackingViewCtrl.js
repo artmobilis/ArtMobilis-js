@@ -19,6 +19,7 @@ angular.module('starter')
   var _destroyed = false;
 
   AssetsLoadingSvc.Load();
+  JourneySceneSvc.DetectionUseFixedAngle(true);
   JourneySceneSvc.Start(true);
 
   if (LoadingSvc.IsLoading()) {
