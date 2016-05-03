@@ -8,7 +8,8 @@ angular.module('starter')
     JourneyManagerSvc,
     JourneySceneSvc,
     LoadingSvc,
-    AssetsLoadingSvc) {
+    AssetsLoadingSvc,
+    CameraSvc) {
   $scope.footer_title = '';
 
   $scope.run = { value: false };
@@ -19,7 +20,10 @@ angular.module('starter')
   var _destroyed = false;
 
   AssetsLoadingSvc.Load();
+  JourneySceneSvc.DetectionUseFixedAngle(true);
   JourneySceneSvc.Start(true);
+  CameraSvc.Start();
+  JourneyManagerSvc.Start();
 
   if (LoadingSvc.IsLoading()) {
     $state.go('loading', { next_state: 'tracking' } );
@@ -83,6 +87,8 @@ angular.module('starter')
     _destroyed = true;
     document.removeEventListener('journey_mode_change', OnJourneyModeChange, false);
     JourneySceneSvc.Stop();
+    CameraSvc.Stop();
+    JourneyManagerSvc.Stop();
   });
 
   $scope.SwitchMode = function() {
