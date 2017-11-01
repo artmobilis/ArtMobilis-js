@@ -3,6 +3,13 @@
   "version": "1.1.1",
   "description": "ArtMobilis: An Ionic project",
   "dependencies": {
+    "cordova-android": "~6.3.0",
+    "cordova-plugin-android-permissions": "^1.0.0",
+    "cordova-plugin-camera": "^2.4.1",
+    "cordova-plugin-compat": "^1.2.0",
+    "cordova-plugin-crosswalk-webview": "^2.3.0",
+    "cordova-plugin-geolocation": "^2.4.3",
+    "cordova-plugin-screen-orientation": "^1.4.3",
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
@@ -29,5 +36,23 @@
   ],
   "cordovaPlatforms": [
     "android"
-  ]
+  ],
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-screen-orientation": {},
+      "cordova-plugin-crosswalk-webview": {
+        "XWALK_VERSION": "23+",
+        "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
+        "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
+        "XWALK_MODE": "embedded",
+        "XWALK_MULTIPLEAPK": "true"
+      },
+      "cordova-plugin-camera": {},
+      "cordova-plugin-geolocation": {},
+      "cordova-plugin-android-permissions": {}
+    },
+    "platforms": [
+      "android"
+    ]
+  }
 }

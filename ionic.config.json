@@ -1,0 +1,26 @@
+{
+  "name": "ArtMobilis",
+  "app_id": "",
+  "gulpStartupTasks": [
+    "sass",
+    "watch",
+    "minify-artmobilib",
+    "copy-ngmodules",
+    "copy-example-1"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ],
+  "browsers": [
+    {
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "12.41.296.5"
+    }
+  ],
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic1"
+}
